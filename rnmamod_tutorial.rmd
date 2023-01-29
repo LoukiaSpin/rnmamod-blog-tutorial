@@ -48,12 +48,12 @@ eligible trials report to have missing participants for each randomised interven
 
 ## The good, the bad, and the ugly 
 
-Consider the following fictional (super) small trial in [Figure 1](#fig:fictional-example) 
-for illustration: 10 participants have been randomised to two interventions. The 
+Consider the following fictional small trial in [Figure 1](#fig:fictional-example) 
+for illustration: 20 participants have been randomised to two interventions. The 
 outcome is binary, such as the symptoms have improved or deteriorated after receiving 
-the randomised intervention. Some participants have completed the trial, and others 
-left the trial prematurely for several reasons. We are interested in drawing conclusions 
-using **the whole randomised sample**.
+the randomised intervention. Some participants have completed the trial (called 
+completers), and others left the trial prematurely for several reasons (called 
+missing). We are interested in drawing conclusions using **the whole randomised sample**.
 
 ```{r fictional, echo=FALSE, out.width = "50%", out.height = "15%", fig.align="center", fig.cap = "Figure 1: A fictional small trial of two interventions", fig.alt=""}
 knitr::include_graphics("fictional.png")
@@ -117,26 +117,16 @@ to handle missing participants. [Figure 4](#fig:imor) illustrates two normal
 distributions of the **informative missingness odds ratio (IMOR)**, a central 
 parameter in the pattern-mixture model for a binary outcome, that quantifies the 
 ratio of the odds of an event in missing participants to the odds of an event in 
-participants completing the trial (completers). IMOR equal to 1 coincides with 
-the MAR mechanism, and IMOR different from 1 implies the MNAR mechanism. We have 
-considered a different IMOR distribution for each intervention: the first intervention 
-is assumed to have on average twice the odds of an event in the completers 
-than that in missing participants (the mode), with other scenarios being less and 
-less likely to occur as we deviate from the mode. On the contrary, the second 
-intervention is assumed to have on average twice the odds of an event in missing
-participant than that in completers (the mode), again, with other scenarios being 
-less and less likely to occur as we deviate from the mode.
+completers. IMOR equal to 1 coincides with the MAR mechanism, and IMOR different 
+from 1 implies the MNAR mechanism. We have considered a different IMOR distribution 
+for each intervention: the first intervention is assumed to have on average twice 
+the odds of an event in completers than that in missing participants (the mode), 
+with other scenarios being less and less likely to occur as we deviate from the 
+mode. On the contrary, the second intervention is assumed to have on average twice 
+the odds of an event in missing participants than that in completers (the mode), 
+again, with other scenarios being less and less likely to occur as we deviate 
+from the mode.
 
-```{r imor, echo=FALSE, out.width = "50%", out.height = "15%", fig.align="center", fig.cap = "Figure 4: The IMOR parameter under different scenarions for each intervention", fig.alt=""}
+```{r imor, echo=FALSE, out.width = "50%", out.height = "15%", fig.align="center", fig.cap = "Figure 4: The IMOR parameter under different scenarios for each intervention", fig.alt=""}
 knitr::include_graphics("imor.png")
 ```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

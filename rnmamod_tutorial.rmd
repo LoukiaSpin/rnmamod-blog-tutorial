@@ -73,38 +73,62 @@ the trial (**missing not at random, MNAR**) and take this assumption for granted
 distribution that describes the association between the missing and observed 
 participants concerning their outcomes (**pattern-mixture model**).
 
-As you may have correctly guessed, exclusion and imputation are the bad and ugly 
-methods, respectively, to handle missing participants. Exclusion is illustrated
-in [Figure 2](#fig:excluded): missing participants in both interventions are removed 
-from the dataset before conducting the analysis. This methods is inappropriate for 
-the goals of our study, where we aim to draw conclusions for the whole randomised 
-sample, as it reduces the sample to those participants who remained in the trial. 
-Consequently, the power to detect a statistically significant association is 
-also reduced. Moreover, if the missingness mechanism is not M(C)AR, the risk 
-of estimating a biased intervention effect (e.g. odds ratio) is also imminent.
+As you may have correctly guessed, **exclusion** and **imputation** are the bad 
+and ugly methods, respectively, to handle missing participants. **Exclusion** is 
+illustrated in [Figure 2](#fig:excluded): missing participants in both interventions 
+are removed from the dataset before conducting the analysis. This methods is 
+inappropriate for the goals of our study, where we aim to draw conclusions for the 
+whole randomised sample, as it reduces the sample to those participants who remained 
+in the trial. Consequently, the power to detect a statistically significant 
+association is also reduced. Moreover, if the missingness mechanism is not M(C)AR, 
+the risk of estimating a biased intervention effect (e.g. odds ratio) is imminent.
 
 ```{r excluded, echo=FALSE, out.width = "50%", out.height = "15%", fig.align="center", fig.cap = "Figure 2: Excluding missing participants from both interventions", fig.alt=""}
 knitr::include_graphics("excluded.png")
 ```
 
-[Figure 3](#fig:imputed) illustrates the imputation: all missing participants in the 
-first intervention have been assumed to have experienced improvement of their symptoms
-(and thus, they left the trial prematurely), whilst all missing participants in 
-the second intervention have been assumed to have experienced deterioration of their 
-symptoms (and thus, they left the trial prematurely). Imputation implies adding 
-the number of missing participants to the outcome dictated by the corresponding 
-scenario: to the number of events (improvement) in the first intervention, and 
-to the number of non-events (deterioration) in the second intervention. This method
-maintains the randomised sample but takes the missingness scenario for granted. 
-Without following the missing participants to record their outcome, we cannot 
-know the true missingness mechanism. Hence, any assumptions we make about the missingness
-mechanism should naturally propagate in the estimation of the intervention effect 
-by increasing its standard error. Imputation rears its ugly head by 'treating' the 
-missing participants as observed, increasing the risk to estimate a biased intervention 
-effect and yield a spuriously narrow 95% confidence interval.
+[Figure 3](#fig:imputed) illustrates the **imputation**: all missing participants 
+in the first intervention have been assumed to have experienced improvement of 
+their symptoms (and thus, they left the trial prematurely), whilst all missing 
+participants in the second intervention have been assumed to have experienced 
+deterioration of their symptoms (and thus, they left the trial prematurely). 
+Imputation implies adding the number of missing participants to the outcome 
+dictated by the corresponding scenario: to the number of events (improvement) in 
+the first intervention, and to the number of non-events (deterioration) in the 
+second intervention. This method maintains the randomised sample but takes the 
+missingness scenario for granted. Without following the missing participants to 
+record their outcome, we cannot know the **true missingness mechanism**. Hence, 
+any assumptions we make about the missingness mechanism should naturally propagate 
+in the estimation of the intervention effect by increasing its standard error. 
+Imputation rears its ugly head by 'treating' the missing participants as observed, 
+increasing the risk to estimate a biased intervention effect and yield a spuriously 
+narrow 95% confidence interval.
 
 ```{r imputed, echo=FALSE, out.width = "50%", out.height = "15%", fig.align="center", fig.cap = "Figure 3: Imputing missing participants making different scenarios in each intervention", fig.alt=""}
 knitr::include_graphics("imputed.png")
+```
+
+The **pattern-mixture model** circumvents the limitations of exclusion and imputation 
+by adjusting, rather than fixing, the average outcome (here, the risk of event) 
+to the assumed missingness mechanism, and propagating this assumption to the standard 
+error of the estimated intervention effect, while maintaining the randomised sample. 
+Therefore, the pattern-mixture model is rightfully entitled as the good method 
+to handle missing participants. [Figure 4](#fig:imor) illustrates two normal 
+distributions of the **informative missingness odds ratio (IMOR)**, a central 
+parameter in the pattern-mixture model for a binary outcome, that quantifies the 
+ratio of the odds of an event in missing participants to the odds of an event in 
+participants completing the trial (completers). IMOR equal to 1 coincides with 
+the MAR mechanism, and IMOR different from 1 implies the MNAR mechanism. We have 
+considered a different IMOR distribution for each intervention: the first intervention 
+is assumed to have on average twice the odds of an event in the completers 
+than that in missing participants (the mode), with other scenarios being less and 
+less likely to occur as we deviate from the mode. On the contrary, the second 
+intervention is assumed to have on average twice the odds of an event in missing
+participant than that in completers (the mode), again, with other scenarios being 
+less and less likely to occur as we deviate from the mode.
+
+```{r imor, echo=FALSE, out.width = "50%", out.height = "15%", fig.align="center", fig.cap = "Figure 4: The IMOR parameter under different scenarions for each intervention", fig.alt=""}
+knitr::include_graphics("imor.png")
 ```
 
 ## Including Plots

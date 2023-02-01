@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r, echo=FALSE, out.width = "70%", out.height = "20%", fig.align="center", fig.cap = "", fig.alt=""}
-knitr::include_graphics("kangaroo-7459871_1280.JPG")
+knitr::include_graphics("./gigures/kangaroo-7459871_1280.JPG")
 ```
 
 ## Aim of the article and pre-requisites
@@ -60,7 +60,7 @@ completers), and others left the trial prematurely for several reasons (called
 missing). We are interested in drawing conclusions using **the whole randomised sample**.
 
 ```{r fictional, echo=FALSE, out.width = "50%", out.height = "15%", fig.align="center", fig.cap = "Figure 1: A fictional small trial of two interventions", fig.alt=""}
-knitr::include_graphics("fictional.png")
+knitr::include_graphics("./gigures/fictional.png")
 ```
 
 Let's be honest; without access to individual patient data, there are only a few 
@@ -90,7 +90,7 @@ association is also reduced. Moreover, if the missingness mechanism is not M(C)A
 the risk of estimating a biased intervention effect (e.g. odds ratio) is imminent. 
 
 ```{r excluded, echo=FALSE, out.width = "50%", out.height = "15%", fig.align="center", fig.cap = "Figure 2: Excluding missing participants from both interventions", fig.alt=""}
-knitr::include_graphics("excluded.png")
+knitr::include_graphics("./gigures/excluded.png")
 ```
 
 ### Imputation
@@ -113,7 +113,7 @@ increasing the risk to estimate a biased intervention effect and draw spurious
 conclusions regarding the statistical significance.
 
 ```{r imputed, echo=FALSE, out.width = "50%", out.height = "15%", fig.align="center", fig.cap = "Figure 3: Imputing missing participants making different scenarios in each intervention", fig.alt=""}
-knitr::include_graphics("imputed.png")
+knitr::include_graphics("./gigures/imputed.png")
 ```
 
 It is needless to say that meta-analysis inherits the limitations of exclusion 
@@ -157,11 +157,11 @@ from the mode. An important technical detail is that the normal distributions
 presented in [Figure 4](#fig:imor) are implied for the IMOR in the logarithmic 
 scale, also commonly considered when estimating the odds ratio. 
 
-```{r imor, echo=FALSE, out.width = "50%", out.height = "15%", fig.align="center", fig.cap = "Figure 4: The IMOR parameter under different scenarios for each intervention", fig.alt=""}
-knitr::include_graphics("imor.png")
+```{r imor, echo=FALSE, out.width = "55%", out.height = "20%", fig.align="center", fig.cap = "Figure 4: The IMOR parameter under different scenarios for each intervention", fig.alt=""}
+knitr::include_graphics("./gigures/imor.png")
 ```
 
-## The versatility of the rnmamod R package
+## The versatility of the rnmamod R package <img src="gigures/hexsticker_rnmamod.png" align="right" width="170" />    
 
 Originally, we developed the rnmamod R package as a response to facilitate handling 
 aggregate missing participants in the absence of relevant functions in the available 
@@ -173,3 +173,44 @@ pattern-mixture model in all models of the package. The rest of the tutorial wal
 you down to the core functions of the package to perform network meta-analysis 
 and obtain a compact, yet comprehensive visual summarisation of a large volume of 
 results. 
+
+### Let's get started
+
+You may install and load the package directly from CRAN by running the code below:
+
+    install.packages("rnmamod")
+    library(rnmamod)
+
+or install the development version of the package running the following code:
+
+    install.packages("devtools")
+    devtools::install_github("LoukiaSpin/rnmamod")
+
+
+We will use the dataset of [Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/) that includes 21 trials comparing seven pharmacological interventions with each other and placebo in chronic obstructive pulmonary disease (COPD) patients. We are interested in whether the patients experienced COPD exacerbation after receiving the randomised intervention. Run the code below to glance at the dataset. The dataset has the one-trial-per-row format, which is the typical format encountered in models written in the BUGS language. 
+
+``` r
+head(nma.baker2009)
+#>                 study t1 t2 t3 t4 r1 r2 r3 r4 m1 m2 m3 m4  n1  n2 n3 n4
+#> Llewellyn-Jones, 1996  1  4 NA NA  3  0 NA NA  1  0 NA NA   8   8 NA NA
+#>        Paggiaro, 1998  1  4 NA NA 51 45 NA NA 27 19 NA NA 139 142 NA NA
+#>          Mahler, 1999  1  7 NA NA 47 28 NA NA 23  9 NA NA 143 135 NA NA
+#>        Casaburi, 2000  1  8 NA NA 41 45 NA NA 18 12 NA NA 191 279 NA NA
+#>       van Noord, 2000  1  7 NA NA 18 11 NA NA  8  7 NA NA  50  47 NA NA
+#>         Rennard, 2001  1  7 NA NA 41 38 NA NA 29 22 NA NA 135 132 NA NA
+```
+
+### Network plot
+
+Let's Create the network plot using the *nma.networkplot* function of the [pcnetmeta](https://CRAN.R-project.org/package=netmeta) R package:
+  
+  ``` r
+# The names of the interventions in the order they appear in the dataset
+interv_names <- c("placebo", "budesonide", "budesonide plus formoterol", "fluticasone", "fluticasone plus salmeterol", "formoterol", "salmeterol", "tiotropium")
+
+netplot(data = nma.baker2009, drug_names = interv_names, text.cex = 1.5)
+```
+
+<div style="text-align: center"> 
+  <img src="man/figures/Network_Baker.png" width="800" height="551" align="center">
+  </div>

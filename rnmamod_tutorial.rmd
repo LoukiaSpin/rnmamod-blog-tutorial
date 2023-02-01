@@ -178,16 +178,19 @@ results.
 
 You may install and load the package directly from CRAN by running the code below:
 
-    install.packages("rnmamod")
-    library(rnmamod)
+``` r
+install.packages("rnmamod")
+library(rnmamod)
+```
 
 or install the development version of the package running the following code:
 
-    install.packages("devtools")
-    devtools::install_github("LoukiaSpin/rnmamod")
+``` r
+install.packages("devtools")
+devtools::install_github("LoukiaSpin/rnmamod")
+```
 
-
-We will use the dataset of [Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/) that includes 21 trials comparing seven pharmacological interventions with each other and placebo in chronic obstructive pulmonary disease (COPD) patients. We are interested in whether the patients experienced COPD exacerbation after receiving the randomised intervention. Run the code below to glance at the dataset. The dataset has the one-trial-per-row format, which is the typical format encountered in models written in the BUGS language. 
+We will use the dataset of [Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/) that includes 21 trials comparing seven pharmacological interventions with each other and placebo in chronic obstructive pulmonary disease (COPD) patients. We are interested in whether the patients experienced COPD exacerbation after receiving the randomised intervention. Run `head(nma.baker2009)` to glance at the dataset. The dataset has the one-trial-per-row format, which is the typical format encountered in models written in the BUGS language. 
 
 ``` r
 head(nma.baker2009)
@@ -201,16 +204,27 @@ head(nma.baker2009)
 ```
 
 ### Network plot
-
-Let's Create the network plot using the *nma.networkplot* function of the [pcnetmeta](https://CRAN.R-project.org/package=netmeta) R package:
+ 
+Let's create the network plot using the `netplot` function which call the *nma.networkplot* function of the [pcnetmeta](https://CRAN.R-project.org/package=netmeta) R package:
   
-  ``` r
-# The names of the interventions in the order they appear in the dataset
+```r
+# The names of the interventions are in the order they appear in the dataset
 interv_names <- c("placebo", "budesonide", "budesonide plus formoterol", "fluticasone", "fluticasone plus salmeterol", "formoterol", "salmeterol", "tiotropium")
 
 netplot(data = nma.baker2009, drug_names = interv_names, text.cex = 1.5)
 ```
 
 <div style="text-align: center"> 
-  <img src="man/figures/Network_Baker.png" width="800" height="551" align="center">
-  </div>
+<img src="gigures/Network_Baker.png" width="800" height="551" align="center">
+</div>
+
+The `netplot` function also prints on the console the followings three tables :
+
+```{r, echo=FALSE, message=FALSE, fig.show='hide'}
+library(rnmamod)
+interv_names <- c("placebo", "budesonide", "budesonide plus formoterol", "fluticasone", "fluticasone plus salmeterol", "formoterol", "salmeterol", "tiotropium")
+netplot(data = nma.baker2009, drug_names = interv_names)$network_description
+netplot(data = nma.baker2009, drug_names = interv_names)$table_interventions
+netplot(data = nma.baker2009, drug_names = interv_names)$table_comparisons
+```
+

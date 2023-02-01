@@ -1,5 +1,5 @@
 ---
-title: "How to conduct network meta-analysis using the rnmamod R package"
+title: "Peek-a-boo: Evidence synthesis with missing participants using the rnmamod R package"
 author: "Loukia M Spineli, Chrysostomos Kalyvas, Katerina Papadimitropoulou"
 date: "2023-01-28"
 output: html_document
@@ -7,6 +7,10 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE, out.width = "70%", out.height = "20%", fig.align="center", fig.cap = "", fig.alt=""}
+knitr::include_graphics("kangaroo-7459871_1280.JPG")
 ```
 
 ## Aim of the article and pre-requisites
@@ -41,9 +45,9 @@ population as close as possible.
 
 The data extraction is coming to an end, and you are looking forward to uncovering 
 the best interventions for the investigated condition. Everybody is motivated, and 
-overwhelmed, yet quite stressed to keep up with deadlines of the project. You pour 
-some coffee in your favorite mug and you start the analysis. You notice that many 
-eligible trials report to have missing participants for each randomised intervention. 
+overwhelmed, yet quite stressed to keep up with the deadlines of the project. You 
+pour some coffee in your favorite mug and you start the analysis. You notice that 
+many eligible trials report to have missing participants. 
 **How are you going to proceed with the analysis?** 
 
 ## The good, the bad, and the ugly 
@@ -70,22 +74,26 @@ to their baseline characteristics (**missing at random, MAR**),
 experienced improvement or deterioration of their symptoms, had they never left 
 the trial (**missing not at random, MNAR**) and take this assumption for granted,
 3. **model** the missingness mechanism (i.e., M(C)AR or MNAR) assuming a probability 
-distribution that describes the association between the missing and observed 
-participants concerning their outcomes (**pattern-mixture model**).
+distribution that describes the association between the missing participants and  
+the completers concerning their outcomes (**pattern-mixture model**).
 
-As you may have correctly guessed, **exclusion** and **imputation** are the bad 
-and ugly methods, respectively, to handle missing participants. **Exclusion** is 
-illustrated in [Figure 2](#fig:excluded): missing participants in both interventions 
+### Exclusion
+
+As you may have guessed, **exclusion** and **imputation** are suboptimal methods 
+to handle missing participants. **Exclusion** is illustrated in 
+[Figure 2](#fig:excluded): missing participants in both interventions 
 are removed from the dataset before conducting the analysis. This methods is 
 inappropriate for the goals of our study, where we aim to draw conclusions for the 
 whole randomised sample, as it reduces the sample to those participants who remained 
 in the trial. Consequently, the power to detect a statistically significant 
 association is also reduced. Moreover, if the missingness mechanism is not M(C)AR, 
-the risk of estimating a biased intervention effect (e.g. odds ratio) is imminent.
+the risk of estimating a biased intervention effect (e.g. odds ratio) is imminent. 
 
 ```{r excluded, echo=FALSE, out.width = "50%", out.height = "15%", fig.align="center", fig.cap = "Figure 2: Excluding missing participants from both interventions", fig.alt=""}
 knitr::include_graphics("excluded.png")
 ```
+
+### Imputation
 
 [Figure 3](#fig:imputed) illustrates the **imputation**: all missing participants 
 in the first intervention have been assumed to have experienced improvement of 
@@ -101,32 +109,67 @@ record their outcome, we cannot know the **true missingness mechanism**. Hence,
 any assumptions we make about the missingness mechanism should naturally propagate 
 in the estimation of the intervention effect by increasing its standard error. 
 Imputation rears its ugly head by 'treating' the missing participants as observed, 
-increasing the risk to estimate a biased intervention effect and yield a spuriously 
-narrow 95% confidence interval.
+increasing the risk to estimate a biased intervention effect and draw spurious 
+conclusions regarding the statistical significance.
 
 ```{r imputed, echo=FALSE, out.width = "50%", out.height = "15%", fig.align="center", fig.cap = "Figure 3: Imputing missing participants making different scenarios in each intervention", fig.alt=""}
 knitr::include_graphics("imputed.png")
 ```
 
-The **pattern-mixture model** circumvents the limitations of exclusion and imputation 
-by adjusting, rather than fixing, the average outcome (here, the risk of event) 
-to the assumed missingness mechanism, and propagating this assumption to the standard 
-error of the estimated intervention effect, while maintaining the randomised sample. 
-Therefore, the pattern-mixture model is rightfully entitled as the good method 
-to handle missing participants. [Figure 4](#fig:imor) illustrates two normal 
-distributions of the **informative missingness odds ratio (IMOR)**, a central 
-parameter in the pattern-mixture model for a binary outcome, that quantifies the 
-ratio of the odds of an event in missing participants to the odds of an event in 
-completers. IMOR equal to 1 coincides with the MAR mechanism, and IMOR different 
-from 1 implies the MNAR mechanism. We have considered a different IMOR distribution 
-for each intervention: the first intervention is assumed to have on average twice 
-the odds of an event in completers than that in missing participants (the mode), 
-with other scenarios being less and less likely to occur as we deviate from the 
-mode. On the contrary, the second intervention is assumed to have on average twice 
+It is needless to say that meta-analysis inherits the limitations of exclusion 
+and imputation observed at trial-level via the inclusion of studies with missing 
+participants, giving you a real headache. Remember, you do not have individual 
+patient data to make use of different cool methods for missing participants. Hence, 
+the quality of the meta-analysis results will strongly dependent, among others, 
+on your *good guess* about the missingness mechanism and how you incorporated 
+this *good guess* into the results having access only to a handful of methods with 
+some being suboptimal. We have good news on that; just, keep reading. 
+
+### Pattern-mixture model
+
+The last member of the squad of methods for missing participants in meta-analysis
+is the pattern-mixture model. The **pattern-mixture model** circumvents the limitations 
+of exclusion and imputation elegantly: it adjusts, rather than fixes, the average 
+outcome (here, the risk of event) to the assumed missingness mechanism, and propagates 
+this assumption to the standard error of the estimated intervention effect, while 
+maintaining the randomised sample. It also allows the assumption about the missing
+mechanism to differ between the interventions or across the trials. Therefore, the 
+pattern-mixture model offers a flexible modelling framework to handle missing participants 
+in meta-analysis properly. If exclusion, imputation and pattern-mixture model were 
+characters from the epic Western spaghetti film, *The Good, the Bad and the Ugly*, 
+the correspondence of who would be who is quite obvious.
+
+[Figure 4](#fig:imor) illustrates two normal distributions of the 
+**informative missingness odds ratio (IMOR)**, a central parameter in the 
+pattern-mixture model for a binary outcome. IMOR resembles the odds ratio for
+two interventions: it compares the odds of an event in missing participants with 
+the odds of an event in completers. IMOR equal to 1 coincides with the MAR mechanism 
+(i.e., no difference in the compared groups), and IMOR different from 1 implies 
+the MNAR mechanism (i.e., the compared groups differ). 
+As an illustration, we have considered a different IMOR distribution for each 
+intervention: the first intervention is assumed to have *on average* twice the 
+odds of an event in completers than that in missing participants (the mode), with 
+other scenarios being less and less likely to occur as we deviate from the mode. 
+On the contrary, the second intervention is assumed to have on average twice 
 the odds of an event in missing participants than that in completers (the mode), 
 again, with other scenarios being less and less likely to occur as we deviate 
-from the mode.
+from the mode. An important technical detail is that the normal distributions 
+presented in [Figure 4](#fig:imor) are implied for the IMOR in the logarithmic 
+scale, also commonly considered when estimating the odds ratio. 
 
 ```{r imor, echo=FALSE, out.width = "50%", out.height = "15%", fig.align="center", fig.cap = "Figure 4: The IMOR parameter under different scenarios for each intervention", fig.alt=""}
 knitr::include_graphics("imor.png")
 ```
+
+## The versatility of the rnmamod R package
+
+Originally, we developed the rnmamod R package as a response to facilitate handling 
+aggregate missing participants in the absence of relevant functions in the available 
+R packages for pairwise and network meta-analysis. Since then, one thing led to 
+another and we ended up expanding our goals to set-up a comprehensive suite of 
+functions to perform and visualise pairwise and network meta-analysis. Proper 
+handling of missing participants remains fundamental and is implemented using the 
+pattern-mixture model in all models of the package. The rest of the tutorial walks 
+you down to the core functions of the package to perform network meta-analysis 
+and obtain a compact, yet comprehensive visual summarisation of a large volume of 
+results. 

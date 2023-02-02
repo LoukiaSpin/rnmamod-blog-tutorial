@@ -179,21 +179,21 @@ results.
 
 You may install and load the package directly **from CRAN** by running the code below:
 
-``` r
+```{r, warning=FALSE}
 install.packages("rnmamod")
 library(rnmamod)
 ```
 
 or install the **development version** of the package running the following code:
 
-``` r
+```{r, results='hide', eval=FALSE}
 install.packages("devtools")
 devtools::install_github("LoukiaSpin/rnmamod")
 ```
 
 We will use the dataset of [Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/) that includes 21 trials comparing seven pharmacological interventions with each other and placebo in chronic obstructive pulmonary disease (COPD) patients. We are interested in whether the patients experienced COPD exacerbation after receiving the randomised intervention. Run `head(nma.baker2009)` to see the first six trials, or `nma.baker2009` to glance at the whole dataset. The dataset has the one-trial-per-row format, which is the typical format encountered in models written in the BUGS language. 
 
-``` r
+```{r, results='hide'}
 head(nma.baker2009)
 #>                 study t1 t2 t3 t4 r1 r2 r3 r4 m1 m2 m3 m4  n1  n2 n3 n4
 #> Llewellyn-Jones, 1996  1  4 NA NA  3  0 NA NA  1  0 NA NA   8   8 NA NA
@@ -206,9 +206,9 @@ head(nma.baker2009)
 
 ### Network plot and evidence description
  
-Let's create the network plot using the `netplot` function. If the plot looks familiar, it is because `netplot` currently calls the `nma.networkplot` function from the [pcnetmeta](https://CRAN.R-project.org/package=netmeta) R package:
+Let's create the network plot using the `netplot` function (type `netplot` to learn more). If the plot looks familiar, it is because `netplot` currently calls the `nma.networkplot` function from the [pcnetmeta](https://CRAN.R-project.org/package=netmeta) R package:
   
-```{r, results='hide', fig.show='hide', message=FALSE}
+```{r, results='hide', fig.show='hide'}
 # The names of the interventions are in the order they appear in the dataset
 interv_names <- c("placebo", "budesonide", "budesonide plus formoterol", "fluticasone", "fluticasone plus salmeterol", "formoterol", "salmeterol", "tiotropium")
 
@@ -216,9 +216,6 @@ interv_names <- c("placebo", "budesonide", "budesonide plus formoterol", "flutic
 netplot(data = nma.baker2009, 
         drug_names = interv_names, 
         text.cex = 1.5)
-
-# Find out more about this function
-?netplot
 ```
 
 ```{r network_baker, echo=FALSE, out.width = "50%", out.height = "20%", fig.align="center", fig.cap = "", fig.alt=""}
@@ -247,37 +244,31 @@ knitr::include_graphics("./gigures/observed_comparisons.png")
 
 ### Mapping the evidence on missing participants
 
-The `nma.baker2009` dataset was selected for the substantial number of missing participants in most trials, interventions and comparisons. We use the `heatmap_missing_dataset` to have a look at how missing participants (in per cent) are distributed in the dataset. The presence of missing participants is quite intense; only a few trials have interventions with zero or low missingness. 
+The `nma.baker2009` dataset was selected for the substantial number of missing participants in most trials, interventions and comparisons. We use the `heatmap_missing_dataset` to have a look at how missing participants (in per cent) are distributed in the dataset. The presence of missing participants is quite intense; only a few trials have interventions with zero or low missingness. Type `?heatmap_missing_dataset` to find out more about this function.
 
-```{r, results='hide', fig.show='hide', message=FALSE}
-# Abbreviated interventions
+```{r, results='hide', fig.show='hide'}
+# Abbreviated interventions (in the order they appear in the datasets)
 abbr_interv_names <- c("placebo", "BUDE", "BUDE plus FORM", "FLUT", "FLUT plus SALM", "FORM", "SALM", "TIOT")
 
 # Create the heatmap of % missing participants for each trial and arm
 heatmap_missing_dataset(data = nma.baker2009, 
                         trial_names = nma.baker2009$study,
                         drug_names = abbr_interv_names)
-
-# Find out more about this function
-?heatmap_missing_dataset
 ```
 
 ```{r missing_dataset, echo=FALSE, out.width = "100%", out.height = "50%", fig.align="center", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/missing_dataset.png")
 ```
 
-Use the `heatmap_missing_network` function to view the median and range of missing participants (in per cent) for each intervention (main diagonal) and comparison (lower off-diagonal). We can immediately spot the comparison with the lowest median of missing participants: tiotropium versus formoterol. Of note, we have used colours that are friendly to people with colour vision deficiency.
+Use the `heatmap_missing_network` function to view the median and range of missing participants (in per cent) for each intervention (main diagonal) and comparison (lower off-diagonal). We can immediately spot the comparison with the lowest median of missing participants: tiotropium versus formoterol. Of note, we have used colours that are friendly to people with colour vision deficiency. Find out more about this function by typing `?heatmap_missing_network`.
 
-```{r, results='hide', fig.show='hide', message=FALSE}
-# Abbreviated interventions
+```{r, results='hide', fig.show='hide'}
+# Abbreviated interventions (in the order they appear in the dataset)
 abbr_interv_names <- c("placebo", "BUDE", "BUDE plus FORM", "FLUT", "FLUT plus SALM", "FORM", "SALM", "TIOT")
 
 # Create the heatmap of % missing participants for each intervention and observed comparison
 heatmap_missing_network(data = nma.baker2009, 
                         drug_names = abbr_interv_names)
-
-# Find out more about this function
-?heatmap_missing_network
 ```
 
 ```{r missing_network, echo=FALSE, out.width = "100%", out.height = "50%", fig.align="center", fig.cap = "", fig.alt=""}
@@ -290,9 +281,9 @@ Now you will be introduced to the *backbone function* of the rnmamod architectur
 
 ### Conduct a random-effects network meta-analysis
 
-Without further ado, let's run a Bayesian random-effects (`model = "RE"`) network meta-analysis while, at the same time, addressing the missing participants in each intervention arm of every trial. The effect measure of interest is odds ratio (`measure = "OR"`). We consider a half-normal prior distribution on the between-trial standard deviation with scale parameter equal to 1 (`model = "RE"`). We will estimate one IMOR parameter for each intervention in the network (`heter_prior = list("halfnormal", 0, 1)`) under the *MAR* assumption on average (`mean_misspar = c(0, 0)`) with a variance equal to 1 (`var_misspar = 1`). The investigated outcome is harmful (`D = 0`). The following code :
+Without further ado, let's run a Bayesian random-effects (`model = "RE"`) network meta-analysis while, at the same time, addressing the missing participants reported in each intervention arm of every trial. The effect measure of interest is the odds ratio (`measure = "OR"`). We consider a half-normal prior distribution on the between-trial standard deviation with scale parameter equal to 1 (`heter_prior = list("halfnormal", 0, 1)`). We will estimate one IMOR parameter for each intervention in the network (`assumption = "IDE-ARM"`) under the *MAR* assumption on average (`mean_misspar = c(0, 0)`) with a variance equal to 1 (`var_misspar = 1`). The investigated outcome is harmful (`D = 0`). Make sure to assign a name to the function to be used as an object in other functions of the model.
   
-```{r, results='hide'}
+```{r, results='hide', message=FALSE, eval=FALSE}
 res <- run_model(data = nma.baker2009,
                  measure = "OR",
                  model = "RE",
@@ -305,6 +296,10 @@ res <- run_model(data = nma.baker2009,
                  n_iter = 10000,
                  n_burnin = 1000,
                  n_thin = 1)
+
 ```
 
+```{r run_model, echo=FALSE, out.width = "60%", out.height = "30%", fig.align="left", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/run_model.png")
+```
 

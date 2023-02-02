@@ -6,6 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
+library(rnmamod)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -176,21 +177,21 @@ results.
 
 ### Let's get started
 
-You may install and load the package directly from CRAN by running the code below:
+You may install and load the package directly **from CRAN** by running the code below:
 
 ``` r
 install.packages("rnmamod")
 library(rnmamod)
 ```
 
-or install the development version of the package running the following code:
+or install the **development version** of the package running the following code:
 
 ``` r
 install.packages("devtools")
 devtools::install_github("LoukiaSpin/rnmamod")
 ```
 
-We will use the dataset of [Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/) that includes 21 trials comparing seven pharmacological interventions with each other and placebo in chronic obstructive pulmonary disease (COPD) patients. We are interested in whether the patients experienced COPD exacerbation after receiving the randomised intervention. Run `head(nma.baker2009)` to glance at the dataset. The dataset has the one-trial-per-row format, which is the typical format encountered in models written in the BUGS language. 
+We will use the dataset of [Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/) that includes 21 trials comparing seven pharmacological interventions with each other and placebo in chronic obstructive pulmonary disease (COPD) patients. We are interested in whether the patients experienced COPD exacerbation after receiving the randomised intervention. Run `head(nma.baker2009)` to see the first six trials, or `nma.baker2009` to glance at the whole dataset. The dataset has the one-trial-per-row format, which is the typical format encountered in models written in the BUGS language. 
 
 ``` r
 head(nma.baker2009)
@@ -203,28 +204,62 @@ head(nma.baker2009)
 #>         Rennard, 2001  1  7 NA NA 41 38 NA NA 29 22 NA NA 135 132 NA NA
 ```
 
-### Network plot
+### Network plot and evidence description
  
-Let's create the network plot using the `netplot` function which call the *nma.networkplot* function of the [pcnetmeta](https://CRAN.R-project.org/package=netmeta) R package:
+Let's create the network plot using the `netplot` function. if the plot looks familiar, it is because `netplot` currently calls the `nma.networkplot` function from the [pcnetmeta](https://CRAN.R-project.org/package=netmeta) R package:
   
-```r
+```{r, results='hide', fig.show='hide'}
 # The names of the interventions are in the order they appear in the dataset
 interv_names <- c("placebo", "budesonide", "budesonide plus formoterol", "fluticasone", "fluticasone plus salmeterol", "formoterol", "salmeterol", "tiotropium")
 
-netplot(data = nma.baker2009, drug_names = interv_names, text.cex = 1.5)
+# Create the network plot and tables
+netplot(data = nma.baker2009, 
+        drug_names = interv_names, 
+        text.cex = 1.5)
 ```
 
-<div style="text-align: center"> 
-<img src="gigures/Network_Baker.png" width="800" height="551" align="center">
-</div>
-
-The `netplot` function also prints on the console the followings three tables :
-
-```{r, echo=FALSE, message=FALSE, fig.show='hide'}
-library(rnmamod)
-interv_names <- c("placebo", "budesonide", "budesonide plus formoterol", "fluticasone", "fluticasone plus salmeterol", "formoterol", "salmeterol", "tiotropium")
-netplot(data = nma.baker2009, drug_names = interv_names)$network_description
-netplot(data = nma.baker2009, drug_names = interv_names)$table_interventions
-netplot(data = nma.baker2009, drug_names = interv_names)$table_comparisons
+```{r network_baker, echo=FALSE, out.width = "50%", out.height = "20%", fig.align="center", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/network_baker.jpg")
 ```
+
+The `netplot` function gives further insights into the network evidence by prints on the console the followings three tables:
+
+* **A description of the network evidence**
+
+```{r network_evidence, echo=FALSE, out.width = "100%", out.height = "50%", fig.align="center", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/network_evidence.png")
+```
+
+* **A summary of the trials, randomised sample, and outcome data for each intervention**
+
+```{r interventions_evidence, echo=FALSE, out.width = "100%", out.height = "50%", fig.align="center", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/interventions_evidence.png")
+```
+
+* **A summary of the trials, randomised sample, and outcome data for each observed comparison in the network**
+
+```{r observed_comparisons, echo=FALSE, out.width = "100%", out.height = "50%", fig.align="center", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/observed_comparisons.png")
+```
+
+### Mapping the evidence on missing participants
+
+The `nma.baker2009` dataset was selected for the substantial number of missing participants in most trials, interventions and comparisons. We use the `heatmap_missing_dataset` to have a look at how missing participants (in per cent)s are distributed in the dataset. 
+
+```{r, results='hide', fig.show='hide'}
+# Abbreviated interventions
+interv_names <- c("placebo", "BUDE", "BUDE plus FORM", "FLUT", "FLUT plus SALM", "FORM", "SALM", "TIOT")
+
+# Create the heatmap of missing participants for each trial and arm
+heatmap_missing_dataset(data = nma.baker2009, 
+                        trial_names = nma.baker2009$study,
+                        drug_names = interv_names)
+```
+
+```{r missing_dataset, echo=FALSE, out.width = "100%", out.height = "50%", fig.align="center", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/missing_dataset.png")
+```
+
+
+### Conduct network meta-analysis
 

@@ -216,6 +216,9 @@ interv_names <- c("placebo", "budesonide", "budesonide plus formoterol", "flutic
 netplot(data = nma.baker2009, 
         drug_names = interv_names, 
         text.cex = 1.5)
+
+# Find out more about this function
+?netplot
 ```
 
 ```{r network_baker, echo=FALSE, out.width = "50%", out.height = "20%", fig.align="center", fig.cap = "", fig.alt=""}
@@ -244,22 +247,43 @@ knitr::include_graphics("./gigures/observed_comparisons.png")
 
 ### Mapping the evidence on missing participants
 
-The `nma.baker2009` dataset was selected for the substantial number of missing participants in most trials, interventions and comparisons. We use the `heatmap_missing_dataset` to have a look at how missing participants (in per cent)s are distributed in the dataset. 
+The `nma.baker2009` dataset was selected for the substantial number of missing participants in most trials, interventions and comparisons. We use the `heatmap_missing_dataset` to have a look at how missing participants (in per cent) are distributed in the dataset. The presence of missing participants is quite intense; only a few trials have interventions with zero or low missingness. 
 
 ```{r, results='hide', fig.show='hide'}
 # Abbreviated interventions
-interv_names <- c("placebo", "BUDE", "BUDE plus FORM", "FLUT", "FLUT plus SALM", "FORM", "SALM", "TIOT")
+abbr_interv_names <- c("placebo", "BUDE", "BUDE plus FORM", "FLUT", "FLUT plus SALM", "FORM", "SALM", "TIOT")
 
-# Create the heatmap of missing participants for each trial and arm
+# Create the heatmap of % missing participants for each trial and arm
 heatmap_missing_dataset(data = nma.baker2009, 
                         trial_names = nma.baker2009$study,
-                        drug_names = interv_names)
+                        drug_names = abbr_interv_names)
+
+# Find out more about this function
+?heatmap_missing_dataset
 ```
 
 ```{r missing_dataset, echo=FALSE, out.width = "100%", out.height = "50%", fig.align="center", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/missing_dataset.png")
 ```
 
+Use the `heatmap_missing_network` function to view the median and range of missing participants (in per cent) for each intervention (main diagonal) and comparison (lower off-diagonal). We can immediately spot the comparison with the lowest median of missing participants: tiotropium versus formoterol. Of note, we have used colours that are friendly to people with colour vision deficiency.
 
-### Conduct network meta-analysis
+```{r, results='hide', fig.show='hide'}
+# Abbreviated interventions
+abbr_interv_names <- c("placebo", "BUDE", "BUDE plus FORM", "FLUT", "FLUT plus SALM", "FORM", "SALM", "TIOT")
 
+# Create the heatmap of % missing participants for each intervention and observed comparison
+heatmap_missing_network(data = nma.baker2009, 
+                        drug_names = abbr_interv_names)
+
+# Find out more about this function
+?heatmap_missing_network
+```
+
+```{r missing_network, echo=FALSE, out.width = "100%", out.height = "50%", fig.align="center", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/missing_network.png")
+```
+
+### The fine architecture of the rnmamod package
+
+Now you will be introduced to the *backbone function* of the rnmamod architecture: the `run_model`. As you will discover in the next chapters of the tutorial, most functions in the package cannot work without the `run_model` function. At the same time, the `run_model` function is not much of use as a *stand-alone* function: it merely returns the results for a bulk of model parameters (and they are a lot). The magic begins once the `run_model` function is fed into the remaining functions of the package. Then you have gots 

@@ -249,7 +249,7 @@ knitr::include_graphics("./gigures/observed_comparisons.png")
 
 The `nma.baker2009` dataset was selected for the substantial number of missing participants in most trials, interventions and comparisons. We use the `heatmap_missing_dataset` to have a look at how missing participants (in per cent) are distributed in the dataset. The presence of missing participants is quite intense; only a few trials have interventions with zero or low missingness. 
 
-```{r, results='hide', fig.show='hide'}
+```{r, results='hide', fig.show='hide', message=FALSE}
 # Abbreviated interventions
 abbr_interv_names <- c("placebo", "BUDE", "BUDE plus FORM", "FLUT", "FLUT plus SALM", "FORM", "SALM", "TIOT")
 
@@ -268,7 +268,7 @@ knitr::include_graphics("./gigures/missing_dataset.png")
 
 Use the `heatmap_missing_network` function to view the median and range of missing participants (in per cent) for each intervention (main diagonal) and comparison (lower off-diagonal). We can immediately spot the comparison with the lowest median of missing participants: tiotropium versus formoterol. Of note, we have used colours that are friendly to people with colour vision deficiency.
 
-```{r, results='hide', fig.show='hide'}
+```{r, results='hide', fig.show='hide', message=FALSE}
 # Abbreviated interventions
 abbr_interv_names <- c("placebo", "BUDE", "BUDE plus FORM", "FLUT", "FLUT plus SALM", "FORM", "SALM", "TIOT")
 
@@ -286,18 +286,25 @@ knitr::include_graphics("./gigures/missing_network.png")
 
 ### The fine architecture of the rnmamod package
 
-Now you will be introduced to the *backbone function* of the rnmamod architecture: the `run_model`. In short, this is the function to conduct **Bayesian network meta-analysis** while accounting for the missing participants (if extracted) via the pattern-mixture model. As you will discover in the next chapters of the tutorial, most functions in the package cannot work without the `run_model` function. At the same time, the `run_model` function is not much of use as a *stand-alone* function: it merely returns the results for a bulk of model parameters (and they are a lot). The magic begins once the `run_model` function is fed into the remaining functions of the package. Then you get to run all necessary analyses that accompany network meta-analysis and obtain a plethora of graphs to help you understand the results and outline your conclusions, **while wearing your critical hat**. [Figure 5](#fig:network_models) presents the network of functions to prepare the data and run all necessary models. 
+Now you will be introduced to the *backbone function* of the rnmamod architecture: the `run_model`. In short, this is the function to conduct **Bayesian network meta-analysis** while accounting for the missing participants (if extracted) via the pattern-mixture model. As you will discover in the next chapters of the tutorial, most functions in the package cannot work without the `run_model` function. At the same time, the `run_model` function is not much of use as a *stand-alone* function: it merely returns the results for a bulk of model parameters (and they are a lot). The magic begins once the `run_model` function is fed into the remaining functions of the package. Then you get to run all necessary analyses that accompany network meta-analysis and obtain a plethora of graphs to help you understand the results and outline your conclusions, **while wearing your critical hat**.
 
-```{r network_models, echo=FALSE, out.width = "100%", out.height = "50%", fig.align="center", fig.cap = "Figure 5: Network of functions for data preparation and model implementation", fig.alt=""}
-knitr::include_graphics("./gigures/network_models.png")
+### Conduct a random-effects network meta-analysis
+
+Without further ado, let's run a Bayesian random-effects (`model = "RE"`) network meta-analysis while, at the same time, addressing the missing participants in each intervention arm of every trial. The effect measure of interest is odds ratio (`measure = "OR"`). We consider a half-normal prior distribution on the between-trial standard deviation with scale parameter equal to 1 (`model = "RE"`). We will estimate one IMOR parameter for each intervention in the network (`heter_prior = list("halfnormal", 0, 1)`) under the *MAR* assumption on average (`mean_misspar = c(0, 0)`) with a variance equal to 1 (`var_misspar = 1`). The investigated outcome is harmful (`D = 0`). The following code :
+  
+```{r, results='hide'}
+res <- run_model(data = nma.baker2009,
+                 measure = "OR",
+                 model = "RE",
+                 assumption = "IDE-ARM",
+                 heter_prior = list("halfnormal", 0, 1),
+                 mean_misspar = c(0, 0), 
+                 var_misspar = 1,
+                 D = 0,
+                 n_chains = 3,
+                 n_iter = 10000,
+                 n_burnin = 1000,
+                 n_thin = 1)
 ```
 
-[Figure 6](#fig:network_visualisation) presents a suite of functions, forming a network, to visualise the results. Notice that the `run_model` function is the dominant node in both networks.
 
-```{r network_visualisation, echo=FALSE, out.width = "100%", out.height = "50%", fig.align="center", fig.cap = "Figure 6: Network of functions for summarising and presenting the analysis results", fig.alt=""}
-knitr::include_graphics("./gigures/network_visualisation.png")
-```
-
-## Conduct a random-effects network meta-analysis
-
-ss

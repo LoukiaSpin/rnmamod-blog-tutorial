@@ -346,7 +346,7 @@ Use the `league_heatmap` function to create the popular league table by running 
 # The names of the interventions are in the order they appear in the dataset
 interv_names <- c("placebo", "budesonide", "budesonide plus formoterol", "fluticasone", "fluticasone plus salmeterol", "formoterol", "salmeterol", "tiotropium")
 
-# The league table as a heatmap
+# The heatmap league table for estimation 
 league_heatmap(full1 = res, 
                drug_names1 = interv_names)
 ```
@@ -365,7 +365,7 @@ The `league_heatmap_pred` function has the **same arguments** with the `league_h
 # The names of the interventions are in the order they appear in the dataset
 interv_names <- c("placebo", "budesonide", "budesonide plus formoterol", "fluticasone", "fluticasone plus salmeterol", "formoterol", "salmeterol", "tiotropium")
 
-# The league table as a heatmap
+# The The heatmap league table for prediction 
 league_heatmap_pred(full1 = res, 
                     drug_names1 = interv_names)
 ```
@@ -373,3 +373,22 @@ league_heatmap_pred(full1 = res,
 ```{r league_baker_pred, echo=FALSE, out.width = "100%", out.height = "70%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/league_baker_pred.png")
 ```
+
+### Intervention ranking and relevant measures
+
+The `rankosucra_plot` function creates an plot that integrates the rankograms and SUCRA curves of all interventions in the network:
+  
+```{r, fig.show='hide', eval=FALSE}
+# The names of the interventions are in the order they appear in the dataset
+interv_names <- c("placebo", "budesonide", "budesonide plus formoterol", "fluticasone", "fluticasone plus salmeterol", "formoterol", "salmeterol", "tiotropium")
+
+# The The heatmap league table for prediction 
+rankosucra_plot(full1 = res, 
+                drug_names1 = interv_names)
+```
+
+```{r sucra_baker, echo=FALSE, out.width = "100%", out.height = "70%", fig.align="left", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/sucra_baker.png")
+```
+
+The interventions are sorted from the best to the worst based on their SUCRA value (the number on the top left corner of each panel). The `rankosucra_plot` function can also display the hierarchy results from two outcomes. , Type `?rankosucra_plot` for more details.

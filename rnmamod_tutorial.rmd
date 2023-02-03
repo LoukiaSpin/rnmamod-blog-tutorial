@@ -284,6 +284,7 @@ Now you will be introduced to the *backbone function* of the rnmamod architectur
 Without further ado, let's run a Bayesian random-effects (`model = "RE"`) network meta-analysis while, at the same time, addressing the missing participants reported in each intervention arm of every trial. The effect measure of interest is the odds ratio (`measure = "OR"`). We consider a half-normal prior distribution on the between-trial standard deviation with scale parameter equal to 1 (`heter_prior = list("halfnormal", 0, 1)`). We will estimate one IMOR parameter for each intervention in the network (`assumption = "IDE-ARM"`) under the *MAR* assumption on average (`mean_misspar = c(0, 0)`) with a variance equal to 1 (`var_misspar = 1`). The investigated outcome is harmful (`D = 0`). Make sure to assign a name to the function to be used as an object in other functions of the model. Note that `run_model` and all other model functions of the package run in [JAGS](https://mcmc-jags.sourceforge.io/).
   
 ```{r, results='hide', message=FALSE, eval=FALSE}
+## Run random-effects network meta-analysis
 res <- run_model(data = nma.baker2009,
                  measure = "OR",
                  model = "RE",
@@ -313,6 +314,7 @@ Now we can use `res` in the arguments of the other model functions to conduct th
 We will use the homonym function, `mcmc_diagnostic`, to find out how our model fared in terms of convergence. 
 
 ```{r, results='hide', message=FALSE, eval=FALSE}
+# Display diagnostics for Bayesian methods
 mcmc_diagnostics(net = res,
                  par = c("EM", "tau"))
 
@@ -330,7 +332,7 @@ Here, we illustrate a panel of bar plots on the log odds ratio for all possible 
 knitr::include_graphics("./gigures/mcmc_effect.png")
 ```
 
-Then `mcmc_diagnostics` opens a browser with a panel of diagnostic plots (trace, density, and autocorrelation) for the monitored parameters specified in the `par` argument (here, the log odds ratio for all possible pairwise comparisons, `"EM"`, and the common between-trial standard deviation, `"tau"`). The HTML file is created thanks to the `mcmcplot` function of the R-package [mcmcplots](https://CRAN.R-project.org/package=mcmcplots).
+Then `mcmc_diagnostics` opens a browser with a panel of diagnostic plots (trace, density, and autocorrelation) for the monitored parameters specified in the `par` argument (here, the log odds ratio for all possible pairwise comparisons, `"EM"`, and the common between-trial standard deviation, `"tau"`). Type `res$jagsfit` to access all monitored parameters from the `run_model` function. The HTML file is created thanks to the `mcmcplot` function of the R-package [mcmcplots](https://CRAN.R-project.org/package=mcmcplots).
 
 ```{r mcmc_browser, echo=FALSE, out.width = "100%", out.height = "70%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/mcmc_browser.png")
@@ -376,13 +378,13 @@ knitr::include_graphics("./gigures/league_baker_pred.png")
 
 ### Intervention ranking and relevant measures
 
-The `rankosucra_plot` function creates an plot that integrates the rankograms and SUCRA curves of all interventions in the network:
+The `rankosucra_plot` function creates a plot for each intervention that combines two popular hierarchy measures: the rankogram and SUCRA plot:
   
 ```{r, fig.show='hide', eval=FALSE}
 # The names of the interventions are in the order they appear in the dataset
 interv_names <- c("placebo", "budesonide", "budesonide plus formoterol", "fluticasone", "fluticasone plus salmeterol", "formoterol", "salmeterol", "tiotropium")
 
-# The The heatmap league table for prediction 
+# The rankogram-SUCRA-plot 'amalgamation'
 rankosucra_plot(full1 = res, 
                 drug_names1 = interv_names)
 ```
@@ -391,4 +393,39 @@ rankosucra_plot(full1 = res,
 knitr::include_graphics("./gigures/sucra_baker.png")
 ```
 
-The interventions are sorted from the best to the worst based on their SUCRA value (the number on the top left corner of each panel). The `rankosucra_plot` function can also display the hierarchy results from two outcomes. , Type `?rankosucra_plot` for more details.
+The interventions are sorted from best to worst based on their SUCRA value (the number on the top left corner of each plot). The `rankosucra_plot` function can also display the hierarchy results from two outcomes; just, type `?rankosucra_plot` for more details.
+
+### Pairwise versus network meta-analysis
+
+We have created the functions `run_series_meta` and `series_meta_plot` to help us explore the implications in the estimated treatment effects and between-trial standard deviation of assuming consistency and common heterogeneity parameter as compared to performing pairwise meta-analysis, separately, for each observed comparison in the network.
+
+First, we apply the `run_series_meta` function that conducts separate pairwise meta-analyses for all observed comparisons in the network:
+
+```{r, results='hide', message=FALSE, eval=FALSE}
+# Run separate pairwise meta-analyses
+meta <- run_series_meta(full = res)
+```
+
+Here, the function inherits the arguments `n_chains`, `n_iter`, `n_burning`, and `n_thin` from the `run_model` function via `res`; however, we can also specify these arguments anew. Like with `run_model`, the console prints the progress of simulations together with the number of models to run: there are 15 observed comparisons in our network; hence, the console prints this message (in red), followed by a progress bar for each analysis alongside the model update until convergence:
+
+```{r run_meta, echo=FALSE, out.width = "60%", out.height = "30%", fig.align="left", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/run_meta.png")
+```
+
+Next, insert `meta` in the function `series_meta_plot` to experience the visualisation toolkit for this analysis:
+
+```{r, results='hide', message=FALSE, eval=FALSE}
+# Abbreviated interventions (in the order they appear in the datasets)
+abbr_interv_names <- c("placebo", "BUDE", "BUDE plus FORM", "FLUT", "FLUT plus SALM", "FORM", "SALM", "TIOT")
+
+# End-user-ready results for a series of pairwise meta-analyses
+series_meta_plot(full = res,
+                 meta = meta,
+                 drug_names = abbr_interv_names)
+```
+
+```{r meta_baker, echo=FALSE, out.width = "100%", out.height = "60%", fig.align="left", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/meta_baker.png")
+```
+
+Network meta-analysis led to more precise results than any pairwise meta-analysis (plot **A)**). Even the heterogeneity was estimated at a reasonable level and with greater precision than any pairwise meta-analysis (plot **B)**): blue vertical lines refer to the posterior median and 95% credible interval of the common heterogeneity parameter in network meta-analysis.

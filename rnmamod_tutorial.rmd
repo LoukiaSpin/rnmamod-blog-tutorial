@@ -366,7 +366,7 @@ The `league_heatmap_pred` function has the **same arguments** with the `league_h
 # The names of the interventions are in the order they appear in the dataset
 interv_names <- c("placebo", "budesonide", "budesonide plus formoterol", "fluticasone", "fluticasone plus salmeterol", "formoterol", "salmeterol", "tiotropium")
 
-# The The heatmap league table for prediction 
+# The heatmap league table for prediction 
 league_heatmap_pred(full1 = res, 
                     drug_names1 = interv_names)
 ```
@@ -374,6 +374,26 @@ league_heatmap_pred(full1 = res,
 ```{r league_baker_pred, echo=FALSE, out.width = "100%", out.height = "70%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/league_baker_pred.png")
 ```
+
+### Forest plot of estimation and prediction
+
+A compact alternative to the league table is to create a forest plot of comparisons with a selected comparator intervention. For illustration, we select budesidone to be the comparator and we run the following code to obtain the precious forest plot where results on estimation and prediction coappear:
+
+```{r, fig.show='hide', eval=FALSE}
+# Abbreviated interventions (in the order they appear in the datasets)
+abbr_interv_names <- c("placebo", "BUDE", "BUDE plus FORM", "FLUT", "FLUT plus SALM", "FORM", "SALM", "TIOT")
+
+# The heatmap league table for prediction 
+forestplot(full = res, 
+           compar = "BUDE",
+           drug_names = abbr_interv_names)
+```
+
+```{r forestplot, echo=FALSE, out.width = "100%", out.height = "60%", fig.align="left", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/forestplot.png")
+```
+
+In plot **A)**, the 95% credible intervals (black lines) overlay the 95% prediction intervals (orange lines). In both plots, the interventions are sorted from best to worst based on their SUCRA value (see plot **B)**).
 
 ### Intervention ranking and relevant measures
 
@@ -474,6 +494,8 @@ nodesplit_plot(full = res,
 knitr::include_graphics("./gigures/node_tab.png")
 ```
 
+Just as with the `series_meta_plot` function, you can export each table to an *xlsx* file at your working directory by inserting the argument `save_xls = TRUE` in the `nodesplit_plot` function.
+
 The panel of interval plots to check consistency through the inconsistency factor (the difference between direct and indirect estimate):
 
 ```{r node_inconfactor, echo=FALSE, out.width = "100%", out.height = "60%", fig.align="left", fig.cap = "", fig.alt=""}
@@ -521,7 +543,9 @@ ume_plot(full = res,
 knitr::include_graphics("./gigures/ume_tab.png")
 ```
 
-Looking at the last two table, we notice sno material difference between the network meta-analysis and the unrelated effects model, and hence, the message in red at the start of the console that **There is little to choose between the two models.** Therefore, consistency may hold globally.
+Looking at the last two tables, we notice no material difference between the network meta-analysis and the unrelated effects model, and hence, the message in red at the start of the console that **There is little to choose between the two models.** Therefore, consistency may hold globally.
+
+Again, you can export each table to an *xlsx* file at your working directory by inserting the argument `save_xls = TRUE` in the `ume_plot` function.
 
 Below, the scatterplot (left) and the Bland-Altman plot (right) on the posterior mean deviance under the network meta-analysis and unrelated mean effects model:
 
@@ -529,7 +553,7 @@ Below, the scatterplot (left) and the Bland-Altman plot (right) on the posterior
 knitr::include_graphics("./gigures/ume_scatterplots.png")
 ```
 
-The leverage plot under the network meta-analysis (left) and the unrelated mean effects model (right):
+The leverage plot under the network meta-analysis (left) and unrelated mean effects model (right):
 
 ```{r ume_leverage, echo=FALSE, out.width = "100%", out.height = "60%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/ume_leverage.png")
@@ -542,3 +566,59 @@ knitr::include_graphics("./gigures/ume_interval.png")
 ```
 
 ### Network meta-regression
+
+We will investigate whether the publication year may have a modification effect. In other words, do treatment effects change over time? We created the vector `cov` with the publication years of the trials in the order they appear in the dataset `nma.baker2009`. 
+
+Run the following code to conduct network meta-regression for the metric characteristic, publication year:
+
+```{r, results='hide', message=FALSE, eval=FALSE}
+# The year of publication
+cov <- c(1996, 1998, 1999, rep(2000, 2), 2001, rep(2002, 5), rep(2003, 2), rep(2005, 4), rep(c(2006, 2007), each = 2))
+
+# Run the unrelated means effect model
+reg <- run_metareg(full = res,
+                   covariate = cov,
+                   covar_assumption = "exchangeable")
+```
+
+```{r reg_console, echo=FALSE, out.width = "50%", out.height = "30%", fig.align="left", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/reg_console.png")
+```
+
+As you may have guessed by now, we insert `reg` into the function `metareg_plot` to obtain the results:
+
+```{r, results='hide', message=FALSE, eval=FALSE}
+# Abbreviated interventions (in the order they appear in the datasets)
+abbr_interv_names <- c("placebo", "BUDE", "BUDE plus FORM", "FLUT", "FLUT plus SALM", "FORM", "SALM", "TIOT")
+
+# End-user-ready results for network meta-regression
+metareg_plot(full = res,
+             reg = reg,
+             compar = "BUDE", 
+             cov_value = list(2002, "Publication year"),
+             drug_names = abbr_interv_names)
+```
+
+In case you were wondering *why a simulation progress appears on the R console*, the posterior mean and standard deviation of the basic parameters and corresponding regression coefficients from `run_metareg` are inserted into the BUGS code to obtain the posterior distribution of the SUCRA at the selected value of the investigated covariate (`cov_value`). 
+
+```{r reg_tab1, echo=FALSE, out.width = "60%", out.height = "30%", fig.align="left", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/reg_tab1.png")
+```
+
+```{r reg_tab2, echo=FALSE, out.width = "90%", out.height = "70%", fig.align="left", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/reg_tab2.png")
+```
+
+```{r reg_tab3, echo=FALSE, out.width = "90%", out.height = "70%", fig.align="left", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/reg_tab3.png")
+```
+
+Overall, the network meta-regression results do not seem to differ from the network meta-analysis results. The posterior mean of the regression coefficient for each intervention (last table) is another hint that the treatment effects may not change over time systematically: the ratio of odds ratios between two subsequent years almost equals 1.
+
+As a reminder, you may insert the argument `save_xls = TRUE` in the `metareg_plot` function to export each table to an *xlsx* file at your working directory.
+
+```{r reg_interval, echo=FALSE, out.width = "100%", out.height = "60%", fig.align="left", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/reg_interval.png")
+```
+
+Just as with the `forestplot` function  the 95% credible intervals (black lines) overlay the 95% prediction intervals (coloured lines) in plot **A)**. The odds ratios pertain to comparisons with budesidone, the selected comparator intervention (`compar = "BUDE"`). In both plots, the interventions are sorted from best to worst based on their SUCRA value (see plot **B)**).

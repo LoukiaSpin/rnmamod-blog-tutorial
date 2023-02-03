@@ -621,4 +621,8 @@ As a reminder, you may insert the argument `save_xls = TRUE` in the `metareg_plo
 knitr::include_graphics("./gigures/reg_interval.png")
 ```
 
-Just as with the `forestplot` function  the 95% credible intervals (black lines) overlay the 95% prediction intervals (coloured lines) in plot **A)**. The odds ratios pertain to comparisons with budesidone, the selected comparator intervention (`compar = "BUDE"`). In both plots, the interventions are sorted from best to worst based on their SUCRA value (see plot **B)**).
+Just as with the `forestplot` function, the 95% credible intervals (black lines) overlay the 95% prediction intervals (coloured lines) in plot **A)**. The odds ratios pertain to comparisons with budesidone, the selected comparator intervention (`compar = "BUDE"`). In both plots, the interventions are sorted from best to worst based on their SUCRA value (see plot **B)**).
+
+```{r reg_sucra, echo=FALSE, out.width = "100%", out.height = "160%", fig.align="center", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/reg_sucra.png")
+```

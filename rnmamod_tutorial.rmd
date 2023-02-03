@@ -184,7 +184,7 @@ install.packages("rnmamod")
 library(rnmamod)
 ```
 
-or install the **development version** of the package running the following code:
+However, we recommend installing the **development version** to experience the latest advances in the package:
 
 ```{r, results='hide', eval=FALSE}
 install.packages("devtools")
@@ -277,7 +277,7 @@ knitr::include_graphics("./gigures/missing_network.png")
 
 ### The fine architecture of the rnmamod package
 
-Now you will be introduced to the *backbone function* of the rnmamod architecture: the `run_model`. In short, this is the function to conduct **Bayesian network meta-analysis** while accounting for the missing participants (if extracted) via the pattern-mixture model. As you will discover in the next chapters of the tutorial, most functions in the package cannot work without the `run_model` function. At the same time, the `run_model` function is not much of use as a *stand-alone* function: it merely returns the results for a bulk of model parameters (and they are a lot). The magic begins once the `run_model` function is fed into the remaining functions of the package. Then you get to run all necessary analyses that accompany network meta-analysis and obtain a plethora of graphs to help you understand the results and outline your conclusions, **while wearing your critical hat**. x
+Now you will be introduced to the *backbone function* of the rnmamod architecture: the `run_model`. In short, this is the function to conduct **Bayesian network meta-analysis** while accounting for the missing participants (if extracted) via the pattern-mixture model. As you will discover in the next chapters of the tutorial, most functions in the package cannot work without the `run_model` function. At the same time, the `run_model` function is not much of use as a *stand-alone* function: it merely returns the results for a bulk of model parameters (and they are a lot). The magic begins once the `run_model` function is fed into the remaining functions of the package. Then you get to run all necessary analyses that accompany network meta-analysis and obtain a plethora of graphs to help you understand the results and outline your conclusions, **while wearing your critical hat**. 
 
 ### Conduct a random-effects network meta-analysis
 
@@ -296,7 +296,6 @@ res <- run_model(data = nma.baker2009,
                  n_iter = 10000,
                  n_burnin = 1000,
                  n_thin = 1)
-
 ```
 
 On the console you see will two sets of progress bars: the first one shows the progress of the simulation. Once the model completes the iterations for all chains, a second progress bar appears on the console that shows the progress of the model update for `n_iter = 10000` iterations until convergence:
@@ -305,6 +304,72 @@ On the console you see will two sets of progress bars: the first one shows the p
 knitr::include_graphics("./gigures/run_model.png")
 ```
 
-> Specifying carefully the arguments of the `run_model` function is essential for the subsequent analyses to yield sensible results. This requires thorough consideration of the proper effect measure (`measure`), the meta-analysis model (`model`), the structure of the missingness parameter (`assumption`), the prior distribution for the heterogeneity parameter (`heter_prior`), the missingness mechanism (`mean_misspar` and `var_misspar`), the direction of the outcome (`D`), and the necessary tuning parameters to run Markov chain Monte Carlo simulations using JAGS (`n_chains`, `n_iter`, `n_burning`, and `n_thin`).
+> Specifying carefully the arguments of the `run_model` function is essential for the subsequent analyses to yield sensible results. This requires thorough consideration of the proper effect measure (`measure`), the meta-analysis model (`model`), the structure of the missingness parameter (`assumption`), the prior distribution for the heterogeneity parameter (`heter_prior`), the missingness mechanism (`mean_misspar` and `var_misspar`), the direction of the outcome (`D`), and the necessary tuning parameters to run Markov chain Monte Carlo simulations using JAGS (`n_chains`, `n_iter`, `n_burning`, and `n_thin`). Refer to the documentation of the function by typing `?run_model`.
 
-ss
+Now we can use `res` in the arguments of the other model functions to conduct the subsequent analyses, and visualise the results. The *journey* has just begun.
+
+### Markov chain Monte Carlo diagnostics
+
+We will use the homonym function, `mcmc_diagnostic`, to find out how our model fared in terms of convergence. 
+
+```{r, results='hide', message=FALSE, eval=FALSE}
+mcmc_diagnostics(net = res,
+                 par = c("EM", "tau"))
+
+```
+
+The function prints on the console a message on *good diagnostic practices* (in red), followed by the names of panel plots and tables on several monitored parameters. 
+
+```{r mcmc_diagn_console, echo=FALSE, out.width = "100%", out.height = "70%", fig.align="left", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/mcmc_diagn_console.png")
+```
+
+Here, we illustrate a panel of bar plots on the log odds ratio for all possible comparisons in the network (x-axis):
+
+```{r mcmc_effect, echo=FALSE, out.width = "75%", out.height = "50%", fig.align="center", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/mcmc_effect.png")
+```
+
+Then `mcmc_diagnostics` opens a browser with a panel of diagnostic plots (trace, density, and autocorrelation) for the monitored parameters specified in the `par` argument (here, the log odds ratio for all possible pairwise comparisons, `"EM"`, and the common between-trial standard deviation, `"tau"`). The HTML file is created thanks to the `mcmcplot` function of the R-package [mcmcplots](https://CRAN.R-project.org/package=mcmcplots).
+
+```{r mcmc_browser, echo=FALSE, out.width = "100%", out.height = "70%", fig.align="left", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/mcmc_browser.png")
+```
+
+### The league tables
+
+#### Estimation
+
+Use the `league_heatmap` function to create the popular league table by running the following code:
+
+```{r, fig.show='hide', eval=FALSE}
+# The names of the interventions are in the order they appear in the dataset
+interv_names <- c("placebo", "budesonide", "budesonide plus formoterol", "fluticasone", "fluticasone plus salmeterol", "formoterol", "salmeterol", "tiotropium")
+
+# The league table as a heatmap
+league_heatmap(full1 = res, 
+               drug_names1 = interv_names)
+```
+
+```{r league_baker, echo=FALSE, out.width = "100%", out.height = "70%", fig.align="left", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/league_baker.png")
+```
+
+The table is read as row versus column. For instance, budesonide plus formoterol (row) versus budesidone (column) is associated with the (posterior mean) odds ratio of 1.28 and a 95% credible interval (0.47, 3.60). The interventions are sorted in decreasing order by their posterior mean [SUCRA](https://pubmed.ncbi.nlm.nih.gov/20688472/) value shown in the main diagonal. The larger the treatment effect, the darker the colour shade. The outcome is harmful, hence, blue favours the first intervention of the comparison, and red favours the second intervention. The `league_heatmap` function can also display the treatment effects from two outcomes. For more details, type `?league_heatmap`.
+
+#### Prediction
+
+The `league_heatmap_pred` function has the **same arguments** with the `league_heatmap` function, but it displays the predictions for all possible pairwise comparisons in the network:
+
+```{r, fig.show='hide', eval=FALSE}
+# The names of the interventions are in the order they appear in the dataset
+interv_names <- c("placebo", "budesonide", "budesonide plus formoterol", "fluticasone", "fluticasone plus salmeterol", "formoterol", "salmeterol", "tiotropium")
+
+# The league table as a heatmap
+league_heatmap_pred(full1 = res, 
+                    drug_names1 = interv_names)
+```
+
+```{r league_baker_pred, echo=FALSE, out.width = "100%", out.height = "70%", fig.align="left", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/league_baker_pred.png")
+```

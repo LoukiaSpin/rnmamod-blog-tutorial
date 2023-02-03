@@ -299,10 +299,12 @@ res <- run_model(data = nma.baker2009,
 
 ```
 
-On the console you see will two sets of progress bars: the first one shows the progress of the simulation. Once the model completes the iterations for all chains, a second progress bar will appear on the console that shows the progress of the model update for `n_iter = 10000` iterations until convergence:
+On the console you see will two sets of progress bars: the first one shows the progress of the simulation. Once the model completes the iterations for all chains, a second progress bar appears on the console that shows the progress of the model update for `n_iter = 10000` iterations until convergence:
 
 ```{r run_model, echo=FALSE, out.width = "60%", out.height = "30%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/run_model.png")
 ```
 
-> 
+> Specifying carefully the arguments of the `run_model` function is essential for the subsequent analyses to yield sensible results. This requires thorough consideration of the proper effect measure (`measure`), the meta-analysis model (`model`), the structure of the missingness parameter (`assumption`), the prior distribution for the heterogeneity parameter (`heter_prior`), the missingness mechanism (`mean_misspar` and `var_misspar`), the direction of the outcome (`D`), and the necessary tuning parameters to run Markov chain Monte Carlo simulations using JAGS (`n_chains`, `n_iter`, `n_burning`, and `n_thin`).
+
+ss

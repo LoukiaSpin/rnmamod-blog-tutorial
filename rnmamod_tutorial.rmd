@@ -424,8 +424,17 @@ series_meta_plot(full = res,
                  drug_names = abbr_interv_names)
 ```
 
+This function returns the same results in **two formats**: (i) a **table** that is printed on the console, and (ii) a **panel of forest plots**.
+
+```{r meta_baker_tab, echo=FALSE, out.width = "100%", out.height = "60%", fig.align="left", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/meta_baker_tab.png")
+```
+
 ```{r meta_baker, echo=FALSE, out.width = "100%", out.height = "60%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/meta_baker.png")
 ```
 
-Network meta-analysis led to more precise results than any pairwise meta-analysis (plot **A)**). Even the heterogeneity was estimated at a reasonable level and with greater precision than any pairwise meta-analysis (plot **B)**): blue vertical lines refer to the posterior median and 95% credible interval of the common heterogeneity parameter in network meta-analysis.
+Network meta-analysis led to more precise results than pairwise meta-analysis for all observed comparisons (plot **A)**). The benefits of conducting network meta-analysis for this example are also evident for the heterogeneity parameter, which was estimated at a reasonable level and with greater precision than any pairwise meta-analysis (plot **B)**): blue vertical lines refer to the posterior median and 95% credible interval of the common heterogeneity parameter in network meta-analysis. By the way, you can export the table to an *xlsx* file at your working directory by inserting the argument `save_xls = TRUE` in the `series_meta_plot` function.
+
+> Comparison of network with pairwise meta-analysis results should **never** be aimed at drawing conclusions about the plausibility of consistency assumption! There are tools specifically devised to evaluate the consistency assumption. In the next part of the tutorial, you will be introduced to the functions that offer local and global evaluation of the consistency assumption.
+

@@ -464,7 +464,7 @@ Next, we insert `node` into the function `nodesplit_plot` to get the necessary r
 # Abbreviated interventions (in the order they appear in the datasets)
 abbr_interv_names <- c("placebo", "BUDE", "BUDE plus FORM", "FLUT", "FLUT plus SALM", "FORM", "SALM", "TIOT")
 
-# End-user-ready results for a series of pairwise meta-analyses
+# End-user-ready results for the consistency evaluation locally
 nodesplit_plot(full = res,
                node = node,
                drug_names = abbr_interv_names)
@@ -492,7 +492,7 @@ Again, the split nodes have been sorted in ascending order of the deviance infor
 
 #### The unrelated mean effects model (global evaluation)
 
-This approach boils down to comparing the network meta-analysis model with a series of pairwise meta-analyses that share a common heterogeneity parameter. The models are, then, compared regarding a set of goodness of fit measuress and relevant diagnostic plots. Let's dive in to two functions: `run_ume` and `ume_plot`. 
+This approach boils down to comparing the network meta-analysis model with a series of pairwise meta-analyses that share a common heterogeneity parameter and are performed in one step. These two models are compared regarding a set of goodness of fit measuress and relevant diagnostic plots. Let's dive in to two functions devised for the global evaluation of consistency: `run_ume` and `ume_plot`. 
 
 The `run_ume` function conducts the mean effects model of [Dias and colleagues](https://pubmed.ncbi.nlm.nih.gov/23804508/):
 
@@ -504,3 +504,41 @@ ume <- run_ume(full = res)
 ```{r ume_console, echo=FALSE, out.width = "50%", out.height = "30%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/ume_console.png")
 ```
+
+Next, we insert `ume` into the function `ume_plot` to shed light on the validity of consistency globally through a variety of results in **tabular and graphical format**:
+
+```{r, results='hide', message=FALSE, eval=FALSE}
+# Abbreviated interventions (in the order they appear in the datasets)
+abbr_interv_names <- c("placebo", "BUDE", "BUDE plus FORM", "FLUT", "FLUT plus SALM", "FORM", "SALM", "TIOT")
+
+# End-user-ready results for the consistency evaluation globally
+ume_plot(full = res,
+         ume = ume,
+         drug_names = abbr_interv_names)
+```
+
+```{r ume_tab, echo=FALSE, out.width = "90%", out.height = "60%", fig.align="left", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/ume_tab.png")
+```
+
+Looking at the last two table, we notice sno material difference between the network meta-analysis and the unrelated effects model, and hence, the message in red at the start of the console that **There is little to choose between the two models.** Therefore, consistency may hold globally.
+
+Below, the scatterplot (left) and the Bland-Altman plot (right) on the posterior mean deviance under the network meta-analysis and unrelated mean effects model:
+
+```{r ume_scatterplots, echo=FALSE, out.width = "100%", out.height = "60%", fig.align="left", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/ume_scatterplots.png")
+```
+
+The leverage plot under the network meta-analysis (left) and the unrelated mean effects model (right):
+
+```{r ume_leverage, echo=FALSE, out.width = "100%", out.height = "60%", fig.align="left", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/ume_leverage.png")
+```
+
+Lastly, a panel of interval plots on the odds ratio under both models only for the pairwise comparisons that are observed in the network:
+
+```{r ume_interval, echo=FALSE, out.width = "100%", out.height = "60%", fig.align="left", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/ume_interval.png")
+```
+
+### Network meta-regression

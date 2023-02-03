@@ -301,7 +301,7 @@ res <- run_model(data = nma.baker2009,
 
 On the console you see will two sets of progress bars: the first one shows the progress of the simulation. Once the model completes the iterations for all chains, a second progress bar appears on the console that shows the progress of the model update for `n_iter = 10000` iterations until convergence:
 
-```{r run_model, echo=FALSE, out.width = "60%", out.height = "30%", fig.align="left", fig.cap = "", fig.alt=""}
+```{r run_model, echo=FALSE, out.width = "50%", out.height = "30%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/run_model.png")
 ```
 
@@ -499,4 +499,8 @@ The `run_ume` function conducts the mean effects model of [Dias and colleagues](
 ```{r, results='hide', message=FALSE, eval=FALSE}
 # Run the unrelated means effect model
 ume <- run_ume(full = res)
+```
+
+```{r ume_console, echo=FALSE, out.width = "50%", out.height = "30%", fig.align="left", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/ume_console.png")
 ```

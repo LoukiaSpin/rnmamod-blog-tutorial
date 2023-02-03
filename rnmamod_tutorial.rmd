@@ -277,7 +277,7 @@ knitr::include_graphics("./gigures/missing_network.png")
 
 ### The fine architecture of the rnmamod package
 
-Now you will be introduced to the *backbone function* of the rnmamod architecture: the `run_model`. In short, this is the function to conduct **Bayesian network meta-analysis** while accounting for the missing participants (if extracted) via the pattern-mixture model. As you will discover in the next chapters of the tutorial, most functions in the package cannot work without the `run_model` function. At the same time, the `run_model` function is not much of use as a *stand-alone* function: it merely returns the results for a bulk of model parameters (and they are a lot). The magic begins once the `run_model` function is fed into the remaining functions of the package. Then you get to run all necessary analyses that accompany network meta-analysis and obtain a plethora of graphs to help you understand the results and outline your conclusions, **while wearing your critical hat**. 
+Now you will be introduced to the *backbone function* of the rnmamod architecture: the `run_model`. In short, this is the function to conduct **Bayesian network meta-analysis** while accounting for the missing participants (if extracted) via the pattern-mixture model. As you will discover in the next chapters of the tutorial, most functions in the package cannot work without the `run_model` function. At the same time, the `run_model` function is not much of use as a *stand-alone* function: it merely returns the results for a bulk of model parameters (and they are a lot). The magic begins once the `run_model` function is fed into the remaining functions of the package. Then you get to run all necessary analyses that accompany network meta-analysis and obtain a plethora of graphs to help you understand the results and outline your conclusions, **while wearing your thinking hat**. 
 
 ### Conduct a random-effects network meta-analysis
 
@@ -405,13 +405,13 @@ First, we apply the `run_series_meta` function that conducts separate pairwise m
 meta <- run_series_meta(full = res)
 ```
 
-Here, the function inherits the arguments `n_chains`, `n_iter`, `n_burning`, and `n_thin` from the `run_model` function via `res`; however, we can also specify these arguments anew. Like with `run_model`, the console prints the progress of simulations together with the number of models to run: there are 15 observed comparisons in our network; hence, the console prints this message (in red), followed by a progress bar for each analysis alongside the model update until convergence:
+Here, the function inherits the arguments `n_chains`, `n_iter`, `n_burning`, and `n_thin` from the `run_model` function via `res`; however, we can also specify these arguments anew. Just as with the `run_model`, the console prints the progress of simulations together with the number of models to run: there are 15 observed comparisons in our network; hence, the console prints this message (in red), followed by a progress bar for each analysis alongside the model update until convergence:
 
 ```{r run_meta, echo=FALSE, out.width = "60%", out.height = "30%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/run_meta.png")
 ```
 
-Next, insert `meta` in the function `series_meta_plot` to experience the visualisation toolkit for this analysis:
+Next, we insert `meta` into the function `series_meta_plot` to experience the visualisation toolkit for this analysis:
 
 ```{r, results='hide', message=FALSE, eval=FALSE}
 # Abbreviated interventions (in the order they appear in the datasets)
@@ -443,3 +443,60 @@ By the way, you can export the table to an *xlsx* file at your working directory
 
 #### The node-splitting approach (local evaluation)
 
+Do you see at least one closed-loop of interventions in your network? Is these loops informed by two-arm trials only or a combination of two-arm and multi-arm trials? Then you must definitely evaluate if network meta-analysis yields sensible results under the consistency assumption or there are loops with evidence of possible inconsistency. We have several closed-loops in the network of Baker et al.
+
+The function `run_nodesplit` applies the [node-splitting approach](https://pubmed.ncbi.nlm.nih.gov/20213715/) with the synergy of the R package [gemtc](https://CRAN.R-project.org/package=gemtc) to select the proper nodes to split (read [van Valkenhoef and colleagues](https://pubmed.ncbi.nlm.nih.gov/26461181/) for more details on the node selection to *split* when multi-arm trials also inform the loops):
+
+```{r, results='hide', message=FALSE, eval=FALSE}
+# Run the node-splitting approach
+node <- run_nodesplit(full = res)
+```
+
+Just as with the `run_series_meta` function, `run_nodesplit` can inherit the MCMC-related arguments from the `run_model` function via `res`, or we can specify these arguments anew. Likewise, the console prints the progress of simulations and the number of node-splitting models to run. There are 8 such models (the message in red), and each one of these models will be also updated until convergence:
+
+```{r node_console, echo=FALSE, out.width = "50%", out.height = "30%", fig.align="left", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/node_console.png")
+```
+
+Next, we insert `node` into the function `nodesplit_plot` to get the necessary results both in **tabular format** and **graphical format**:
+
+```{r, results='hide', message=FALSE, eval=FALSE}
+# Abbreviated interventions (in the order they appear in the datasets)
+abbr_interv_names <- c("placebo", "BUDE", "BUDE plus FORM", "FLUT", "FLUT plus SALM", "FORM", "SALM", "TIOT")
+
+# End-user-ready results for a series of pairwise meta-analyses
+nodesplit_plot(full = res,
+               node = node,
+               drug_names = abbr_interv_names)
+```
+
+```{r node_tab, echo=FALSE, out.width = "110%", out.height = "80%", fig.align="left", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/node_tab.png")
+```
+
+The panel of interval plots to check consistency through the inconsistency factor (the difference between direct and indirect estimate):
+
+```{r node_inconfactor, echo=FALSE, out.width = "100%", out.height = "60%", fig.align="left", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/node_inconfactor.png")
+```
+
+For each split node, we can see the estimated *direct* effect (from pairwise meta-analysis), the *indirect* effect (after removing the corresponding comparison from the network), and the *inconsistency factor* (IF). The deviance information criterion for each model appear on the top left of each plot. The plots have been sorted in ascending order of the deviance information criterion. The 95% credible interval for the inconsistency factor crosses the vertical line (of no difference) in all plots. One may conclude that the consistency assumption holds; however, the point estimate is not even close to zero in all plots. **Thinking hat on the head**.
+
+An reverse forest plot on the between-trial standard deviation for each split node:
+
+```{r node_tau, echo=FALSE, out.width = "100%", out.height = "60%", fig.align="left", fig.cap = "", fig.alt=""}
+knitr::include_graphics("./gigures/node_tau.png")
+```
+
+Again, the split nodes have been sorted in ascending order of the deviance information criterion. The blue horizontal lines refer to the posterior median and 95% credible interval of the common heterogeneity parameter in network meta-analysis.
+
+#### The unrelated mean effects model (global evaluation)
+
+This approach boils down to comparing the network meta-analysis model with a series of pairwise meta-analyses that share a common heterogeneity parameter. The models are, then, compared regarding a set of goodness of fit measuress and relevant diagnostic plots. Let's dive in to two functions: `run_ume` and `ume_plot`. 
+
+The `run_ume` function conducts the mean effects model of [Dias and colleagues](https://pubmed.ncbi.nlm.nih.gov/23804508/):
+
+```{r, results='hide', message=FALSE, eval=FALSE}
+# Run the unrelated means effect model
+ume <- run_ume(full = res)
+```

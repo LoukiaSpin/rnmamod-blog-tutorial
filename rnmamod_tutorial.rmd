@@ -317,7 +317,6 @@ We will use the homonym function, `mcmc_diagnostic`, to find out how our model f
 # Display diagnostics for Bayesian methods
 mcmc_diagnostics(net = res,
                  par = c("EM", "tau"))
-
 ```
 
 The function prints on the console a message on *good diagnostic practices* (in red), followed by the names of panel plots and tables on several monitored parameters. 
@@ -328,7 +327,7 @@ knitr::include_graphics("./gigures/mcmc_diagn_console.png")
 
 Here, we illustrate a panel of bar plots on the log odds ratio for all possible comparisons in the network (x-axis):
 
-```{r mcmc_effect, echo=FALSE, out.width = "75%", out.height = "50%", fig.align="center", fig.cap = "", fig.alt=""}
+```{r mcmc_effect, echo=FALSE, out.width = "100%", out.height = "70%", fig.align="center", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/mcmc_effect.png")
 ```
 
@@ -434,7 +433,13 @@ knitr::include_graphics("./gigures/meta_baker_tab.png")
 knitr::include_graphics("./gigures/meta_baker.png")
 ```
 
-Network meta-analysis led to more precise results than pairwise meta-analysis for all observed comparisons (plot **A)**). The benefits of conducting network meta-analysis for this example are also evident for the heterogeneity parameter, which was estimated at a reasonable level and with greater precision than any pairwise meta-analysis (plot **B)**): blue vertical lines refer to the posterior median and 95% credible interval of the common heterogeneity parameter in network meta-analysis. By the way, you can export the table to an *xlsx* file at your working directory by inserting the argument `save_xls = TRUE` in the `series_meta_plot` function.
+Network meta-analysis led to more precise results than pairwise meta-analysis for all observed comparisons (plot **A)**). The benefits of conducting network meta-analysis for this example are also evident for the heterogeneity parameter, which was estimated at a reasonable level and with greater precision than any pairwise meta-analysis (plot **B)**): blue vertical lines refer to the posterior median and 95% credible interval of the common heterogeneity parameter in network meta-analysis. 
 
-> Comparison of network with pairwise meta-analysis results should **never** be aimed at drawing conclusions about the plausibility of consistency assumption! There are tools specifically devised to evaluate the consistency assumption. In the next part of the tutorial, you will be introduced to the functions that offer local and global evaluation of the consistency assumption.
+By the way, you can export the table to an *xlsx* file at your working directory by inserting the argument `save_xls = TRUE` in the `series_meta_plot` function.
+
+> Comparison of network with pairwise meta-analysis results should **never** be aimed at drawing conclusions about the plausibility of consistency assumption! There are tools specifically devised to evaluate the consistency assumption. In the next part of the tutorial, you will be introduced to the functions of the package that offer local and global evaluation of the consistency assumption.
+
+### Consistency evaluation
+
+#### The node-splitting approach (local evaluation)
 

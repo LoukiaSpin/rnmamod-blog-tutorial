@@ -139,10 +139,8 @@ knitr::include_graphics("./gigures/imor.png")
 
 ## The versatility of the rnmamod R package <img src="gigures/hexsticker_rnmamod.png" align="right" width="170" />    
 
-Originally, we developed the rnmamod R package as a response to facilitate handling 
-aggregate missing participants in the absence of relevant functions in the available 
-R packages for pairwise and network meta-analysis. Since then (2 years ago), one 
-thing led to another and we ended up expanding our goals to set-up a comprehensive 
+The rnmamod R package was originally developed to address the lack of dedicated functions for handling
+missing participants in pairwise and network meta-analysis in existing R packages. Over time, our goal expanded to create a comprehensive 
 suite of functions to perform and visualise Bayesian pairwise and network meta-analysis. 
 Proper handling of missing participants remains fundamental and is implemented 
 using the pattern-mixture model in all models of the package. The rest of the 

@@ -95,15 +95,13 @@ statistical significance conclusions.
 ```{r imputed, echo=FALSE, out.width = "50%", out.height = "15%", fig.align="center", fig.cap = "Figure 3: Imputing missing participants making different scenarios in each intervention", fig.alt=""}
 knitr::include_graphics("./gigures/imputed.png")
 ```
-
-It is needless to say that meta-analysis inherits the limitations of exclusion 
+(Network) meta-analysis inherits the limitations of exclusion 
 and imputation observed at trial-level via the inclusion of trials with missing 
-participants, giving you a real headache. Remember, you do not have individual 
-patient data to make use of different cool methods for missing participants. Hence, 
-the quality of the meta-analysis results will strongly dependent, among others, 
-on your *good guess* about the missingness mechanism and how you incorporated 
-this *good guess* into the results having access only to a handful of methods with 
-some being suboptimal. We have good news on that; just, keep reading. 
+participants. As you do not have individual 
+participant data to make use of different cool methods for missing participants, 
+the quality of the (network) meta-analysis results will strongly depend, among others things, 
+on your *good guess* about the missingness mechanism and how you incorporate 
+this *good guess* into the results. We have good news on that; just, keep reading. 
 
 ### Pattern-mixture model
 

@@ -250,12 +250,12 @@ We can immediately spot the comparison with the lowest median of missing partici
 
 This section introduces you to the *backbone function* of the rnmamod architecture: the `run_model`. This function conducts **Bayesian network meta-analysis** while accounting for missing participants using the pattern-mixture model. Most functions in the package cannot work without the `run_model` function and, on its own, it returns results for a bulk of model parameters. The magic happens once the `run_model` function is fed into the other functions of the package, which enable you to  run all necessary analyses and obtain various graphs to understand and interpret the results.
 
-### Conduct a random-effects network meta-analysis
+### Conducting a random-effects network meta-analysis
 
-Without further ado, let's run a Bayesian random-effects (`model = "RE"`) network meta-analysis while, at the same time, addressing the missing participants reported in each intervention arm of every trial. The effect measure of interest is the odds ratio (`measure = "OR"`). We consider a half-normal prior distribution on the between-trial standard deviation with scale parameter equal to 1 (`heter_prior = list("halfnormal", 0, 1)`). We will estimate one IMOR parameter for each intervention (`assumption = "IDE-ARM"`) under the *MAR* assumption on average (`mean_misspar = c(0, 0)`) with a variance equal to 1 (`var_misspar = 1`). The investigated outcome is harmful (`D = 0`). Make sure to assign a name to the function to be used as an object in the other functions of the model. Note that `run_model` and all other model functions of the package run in [JAGS](https://mcmc-jags.sourceforge.io/).
+Let's run a Bayesian random-effects (`model = "RE"`) network meta-analysis while addressing missing participants reported in each intervention arm of every trial. The effect measure of interest is the odds ratio (`measure = "OR"`). A half-normal prior distribution is used for the between-trial standard deviation with scale parameter equal to 1 (`heter_prior = list("halfnormal", 0, 1)`) and one IMOR parameter is estimated for each intervention in the network (`assumption = "IDE-ARM"`). The model operates under the *MAR* assumption on average (`mean_misspar = c(0, 0)`) with a variance equal to 1 (`var_misspar = 1`) for the outcome being harmful (`D = 0`). Assign a name to the function to use it as an object in the other functions in the model. The `run_model` function and all other model functions run in [JAGS](https://mcmc-jags.sourceforge.io/).
   
 ```{r, results='hide', message=FALSE, eval=FALSE}
-## Run random-effects network meta-analysis
+## Run a random-effects network meta-analysis
 res <- run_model(data = nma.baker2009,
                  measure = "OR",
                  model = "RE",

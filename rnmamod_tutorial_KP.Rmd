@@ -141,12 +141,9 @@ knitr::include_graphics("./gigures/imor.png")
 
 The rnmamod R package was originally developed to address the lack of dedicated functions for handling
 missing participants in pairwise and network meta-analysis in existing R packages. Over time, our goal expanded to create a comprehensive 
-suite of functions to perform and visualise Bayesian pairwise and network meta-analysis. 
-Proper handling of missing participants remains fundamental and is implemented 
-using the pattern-mixture model in all models of the package. The rest of the 
-tutorial walks you down to the core functions of the package to perform 
-Bayesian **network meta-analysis** and obtain a compact, yet comprehensive visual 
-summarisation of a large volume of results. 
+suite of functions for performing and visualizing Bayesian pairwise and network meta-analysis. 
+The package implements the pattern-mixture model for Proper handling of missing participants in all models. 
+In this tutorial, we will walk you through the core functions of the package and provide a comprehensive visual summary of the results. 
 
 ### Let's get started
 

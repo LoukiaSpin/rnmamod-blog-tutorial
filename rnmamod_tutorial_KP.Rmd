@@ -54,15 +54,13 @@ knitr::include_graphics("./gigures/fictional.png")
 Without individual participant data, there are only a few 
 methods to handle missing participants in (network) meta-analysis:
 
-1. **Exclusion** - under the assumption that the missing participants' outcomes are
+1. **Exclusion** – under the assumption that the missing participants' outcomes are
 missing due to reasons unrelated to the planning and conduct of the trial 
 (**missing completely at random, MCAR**), or due to their baseline characteristics (**missing at random, MAR**),
-2. **impute** missing participants under the assumption that they would have 
-experienced improvement or deterioration of their symptoms, had they never left 
-the trial (**missing not at random, MNAR**) and take this assumption for granted,
-3. **model** the missingness mechanism (i.e., M(C)AR or MNAR) assuming a probability 
-distribution that describes the association between the missing participants and 
-the completers concerning their outcomes (**pattern-mixture model**).
+2. **Imputation** – assuming that the missing participants would have improved or worsened symptoms had they not left 
+the trial (**missing not at random, MNAR**),
+3. **Modelling** – the missingness mechanism (i.e., M(C)AR or MNAR) using a probability 
+distribution to describe the association between the missing and completers' outcomes (**pattern-mixture model**).
 
 ### Exclusion
 

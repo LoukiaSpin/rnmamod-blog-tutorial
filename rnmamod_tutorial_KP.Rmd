@@ -44,8 +44,10 @@ While reviewing the extracted data, you notice that many eligible trials report 
 
 ## The good, the bad, and the ugly 
 
-Consider the following fictional small trial in [Figure 1](#fig:fictional-example) 
-for illustration: 20 participants have been randomised to two interventions. The 
+Consider the small fictional trial in [Figure 1](#fig:fictional-example), where 20 participants have been randomised into two interventions and
+the outcome is binary (symptoms improved or worsened after intervetion).
+
+The 
 outcome is binary, such as the symptoms have improved or deteriorated after receiving 
 the randomised intervention. Some participants have completed the trial (called 
 completers), and others left the trial prematurely for several reasons (called 

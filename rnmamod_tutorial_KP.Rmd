@@ -244,11 +244,11 @@ heatmap_missing_network(data = nma.baker2009,
 ```{r missing_network, echo=FALSE, out.width = "100%", out.height = "50%", fig.align="center", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/missing_network.png")
 ```
-
 We can immediately spot the comparison with the lowest median of missing participants: tiotropium versus formoterol. 
+
 ### The fine architecture of the rnmamod package
 
-Now you will be introduced to the *backbone function* of the rnmamod architecture: the `run_model`. In short, this is the function to conduct **Bayesian network meta-analysis** while accounting for the missing participants (if extracted) via the pattern-mixture model. As you will discover in the next chapters of the tutorial, most functions in the package cannot work without the `run_model` function. At the same time, the `run_model` function is not much of use as a *stand-alone* function: it merely returns the results for a bulk of model parameters (and they are a lot). The magic begins once the `run_model` function is fed into the remaining functions of the package. Then you get to run all necessary analyses that accompany network meta-analysis and obtain a plethora of graphs to help you understand the results and outline your conclusions, **while wearing your thinking hat**. 
+This section introduces you to the *backbone function* of the rnmamod architecture: the `run_model`. This function conducts **Bayesian network meta-analysis** while accounting for missing participants using the pattern-mixture model. Most functions in the package cannot work without the `run_model` function and, on its own, it returns results for a bulk of model parameters. The magic happens once the `run_model` function is fed into the other functions of the package, which enable you to  run all necessary analyses and obtain various graphs to understand and interpret the results.
 
 ### Conduct a random-effects network meta-analysis
 

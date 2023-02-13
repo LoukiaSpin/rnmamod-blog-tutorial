@@ -174,7 +174,8 @@ head(nma.baker2009)
 ```
 
 ### Network plot and evidence description
-Let's create the network plot using the `netplot` function (type `?netplot` to learn more):
+
+To create a network plot use the `netplot` function (type `?netplot` to learn more):
   
 ```{r, results='hide', fig.show='hide'}
 # The names of the interventions are in the order they appear in the dataset
@@ -189,9 +190,7 @@ netplot(data = nma.baker2009,
 ```{r network_baker, echo=FALSE, out.width = "50%", out.height = "20%", fig.align="center", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/network_baker.jpg")
 ```
-
-If the plot looks familiar, it is because `netplot` currently calls the `nma.networkplot` function from the [pcnetmeta](https://CRAN.R-project.org/package=netmeta) R package.
-
+The function currently calls the `nma.networkplot` function from the [pcnetmeta](https://CRAN.R-project.org/package=netmeta) R package.
 The `netplot` function gives further insights into the network evidence by printing the following three tables on the console:
 
 * **A description of the network evidence**
@@ -213,7 +212,7 @@ knitr::include_graphics("./gigures/observed_comparisons.png")
 
 ### Mapping the evidence on missing participants
 
-The `nma.baker2009` dataset was selected for the substantial number of missing participants in most trials, interventions and comparisons. We use the `heatmap_missing_dataset` function to have a look at how missing participants (in per cent) are distributed in the dataset:
+The `nma.baker2009` dataset was selected due to its high number of missing participants in most trials, interventions and comparisons. Use the `heatmap_missing_dataset` function to view the distribution of missing participants (in percent) in the dataset. Most trials have interventiones with high level of missingness, with only a few trials having zeror or low missingness rate.
 
 ```{r, results='hide', fig.show='hide'}
 # Abbreviated interventions (in the order they appear in the datasets)
@@ -231,7 +230,7 @@ knitr::include_graphics("./gigures/missing_dataset.png")
 
 The presence of missing participants is quite intense; only a few trials have interventions with zero or low missingness. 
 
-Use the `heatmap_missing_network` function to view the median and range of missing participants (in per cent) for each intervention (main diagonal) and comparison (lower off-diagonal):
+Use the `heatmap_missing_network` function to view the median and range of missing participants (in percent) for each intervention (on the main diagonal) and comparison (lower off-diagonal):
 
 ```{r, results='hide', fig.show='hide'}
 # Abbreviated interventions (in the order they appear in the dataset)
@@ -246,8 +245,7 @@ heatmap_missing_network(data = nma.baker2009,
 knitr::include_graphics("./gigures/missing_network.png")
 ```
 
-We can immediately spot the comparison with the lowest median of missing participants: tiotropium versus formoterol. Of note, we have used colours that are friendly to people with colour vision deficiency.
-
+We can immediately spot the comparison with the lowest median of missing participants: tiotropium versus formoterol. 
 ### The fine architecture of the rnmamod package
 
 Now you will be introduced to the *backbone function* of the rnmamod architecture: the `run_model`. In short, this is the function to conduct **Bayesian network meta-analysis** while accounting for the missing participants (if extracted) via the pattern-mixture model. As you will discover in the next chapters of the tutorial, most functions in the package cannot work without the `run_model` function. At the same time, the `run_model` function is not much of use as a *stand-alone* function: it merely returns the results for a bulk of model parameters (and they are a lot). The magic begins once the `run_model` function is fed into the remaining functions of the package. Then you get to run all necessary analyses that accompany network meta-analysis and obtain a plethora of graphs to help you understand the results and outline your conclusions, **while wearing your thinking hat**. 

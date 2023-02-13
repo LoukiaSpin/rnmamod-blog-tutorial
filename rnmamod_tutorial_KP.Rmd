@@ -308,7 +308,7 @@ knitr::include_graphics("./gigures/mcmc_browser.png")
 
 #### Estimation
 
-Use the `league_heatmap` function to create the popular league table by running the following code:
+Use the `league_heatmap` function to create the popular league table:
 
 ```{r, fig.show='hide', eval=FALSE}
 # The names of the interventions are in the order they appear in the dataset
@@ -323,11 +323,12 @@ league_heatmap(full1 = res,
 knitr::include_graphics("./gigures/league_baker.png")
 ```
 
-The table is read as row versus column. For instance, budesonide plus formoterol (row) versus budesidone (column) is associated with the (posterior mean) odds ratio of 1.28 and a 95% credible interval (0.47, 3.60). The interventions are sorted in decreasing order by their posterior mean [SUCRA](https://pubmed.ncbi.nlm.nih.gov/20688472/) value shown in the main diagonal. The larger the intervention effect, the darker the colour shade. The outcome is harmful, hence, blue favours the first intervention of the comparison, and red favours the second intervention. The `league_heatmap` function can also display the intervention effects from two outcomes, or for a selected subset of interventions. For more details, type `?league_heatmap`.
+The table is read as row versus column and shows the (posterior mean) odds ration and 95% credible interval for each comparison The interventions are sorted in decreasing order by their posterior mean SUCRA value shown in the main diagonal. The larger the treatment effect, the darker the color shade. The `league_heatmap` function can also display the treatment effects from two outcomes. 
+
 
 #### Prediction
 
-The `league_heatmap_pred` function has the **same arguments** with `league_heatmap`, but it displays the predictions for all possible pairwise comparisons in the network:
+The `league_heatmap_pred` function has the **same arguments** as `league_heatmap`, but it displays predictions for all possible pairwise comparisons in the network:
 
 ```{r, fig.show='hide', eval=FALSE}
 # The names of the interventions are in the order they appear in the dataset
@@ -344,7 +345,7 @@ knitr::include_graphics("./gigures/league_baker_pred.png")
 
 ### Forest plot of estimation and prediction
 
-A compact alternative to the league table is to create a forest plot of comparisons with a selected comparator intervention. For illustration, we select budesidone to be the comparator and we run the following code to obtain the precious forest plot with results on estimation and prediction coappearing:
+A compact alternative to the league table is to create a forest plot of comparisons with a selected comparator intervention. For illustration, we have selected budesidone as the reference and we ran the following code to obtain the forest plot where results on estimation and prediction co-appear:
 
 ```{r, fig.show='hide', eval=FALSE}
 # Abbreviated interventions (in the order they appear in the datasets)
@@ -359,7 +360,6 @@ forestplot(full = res,
 ```{r forestplot, echo=FALSE, out.width = "100%", out.height = "60%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/forestplot.png")
 ```
-
 In plot **A)**, the 95% credible intervals (black lines) overlay the 95% prediction intervals (orange lines). In both plots, the interventions are sorted from best to worst based on their SUCRA value (see plot **B)**).
 
 ### Intervention ranking and relevant measures
@@ -383,9 +383,9 @@ The interventions are sorted from best to worst based on their SUCRA value (the 
 
 ### Pairwise versus network meta-analysis
 
-We have created the functions `run_series_meta` and `series_meta_plot` to help us explore the implications in the estimated intervention effects and between-trial standard deviation of assuming consistency and common heterogeneity as compared to performing pairwise meta-analysis, separately, for each observed comparison in the network.
+We have created the functions `run_series_meta` and `series_meta_plot` to help us explore the implications of assumin consistency and common heterogeneity, as opposed to performing pairwise meta-analysis separately for each observed comparison in the network.
 
-First, we apply the `run_series_meta` function that conducts separate pairwise meta-analyses for all observed comparisons in the network:
+First, we use the `run_series_meta` function to conduct separate pairwise meta-analyses for all observed comparisons in the network:
 
 ```{r, results='hide', message=FALSE, eval=FALSE}
 # Run separate pairwise meta-analyses
@@ -420,30 +420,28 @@ knitr::include_graphics("./gigures/meta_baker_tab.png")
 knitr::include_graphics("./gigures/meta_baker.png")
 ```
 
-Network meta-analysis led to more precise results than pairwise meta-analysis for all observed comparisons (plot **A)**). The benefits of conducting network meta-analysis for this example are also evident for the heterogeneity parameter, which was estimated at a reasonable level and with greater precision than in any pairwise meta-analysis (plot **B)**): blue vertical lines refer to the posterior median and 95% credible interval of the common heterogeneity parameter in network meta-analysis. 
+Network meta-analysis produced more precise results than pairwise meta-analysis for all observed comparisons (plot **A)**). The benefits of conducting network meta-analysis for this example are also evident for the heterogeneity parameter, which was estimated at a reasonable level and with greater precision than in any pairwise meta-analysis (plot **B)**): blue vertical lines refer to the posterior median and 95% credible interval of the common heterogeneity parameter in network meta-analysis. 
 
-By the way, you can export the table to an *xlsx* file at your working directory by inserting the argument `save_xls = TRUE` in the `series_meta_plot` function.
+You can export the table to an *xlsx* file in your working directory by adding the argument `save_xls = TRUE` in the `series_meta_plot` function.
 
-> Comparison of network meta-analysis with pairwise meta-analysis results should **never** be aimed at drawing conclusions about the possibility of consistency assumption! There are tools specifically devised to evaluate the consistency assumption. In the next part of the tutorial, you will be introduced to the functions that offer local and global evaluation of the consistency assumption.
+> Note that comparing network meta-analysis with pairwise meta-analysis results should **never** be used to draw conclusions about the possibility of consistency assumption! There are specific tools designed to evaluate the consistency assumption. In the next part of the tutorial, we will introduce you to functions that offer local and global assessment of the consistency assumption.
 
 ### Consistency evaluation
 #### The node-splitting approach (local evaluation)
 
-Do you see at least one closed-loop of interventions in your network? Are these loops informed by two-arm trials only or a combination of two-arm and multi-arm trials? Then you must definitely evaluate if network meta-analysis yields sensible results under the consistency assumption or there are loops with evidence of possible inconsistency. We have several closed-loops in the COPD network (see the network plot above).
+Do you see at least one closed-loop of interventions in your network? Are these loops informed by two-arm trials only, or a combination of two-arm and multi-arm trials? If so, you must evaluate whether network meta-analysis produces sensible results under the consistency assumption or if there are loops with evidence of possible inconsistency. Our COPD network has several closed loops (see the network plot above).
 
-The function `run_nodesplit` applies the [node-splitting approach](https://pubmed.ncbi.nlm.nih.gov/20213715/) with the synergy of the R package [gemtc](https://CRAN.R-project.org/package=gemtc) to select the proper nodes to split (read [van Valkenhoef and colleagues](https://pubmed.ncbi.nlm.nih.gov/26461181/) for more details on which nodes to *split* when there are also multi-arm trials in the loops):
+The `run_nodesplit` function applies the [node-splitting approach](https://pubmed.ncbi.nlm.nih.gov/20213715/) with the synergy of the R package [gemtc](https://CRAN.R-project.org/package=gemtc) to select the proper nodes to split (read [van Valkenhoef and colleagues](https://pubmed.ncbi.nlm.nih.gov/26461181/) for more details on which nodes to *split* when multi-arm trials are also present in the loops):
 
 ```{r, results='hide', message=FALSE, eval=FALSE}
 # Run the node-splitting approach
 node <- run_nodesplit(full = res)
 ```
-
 Just as with the `run_series_meta` function, `run_nodesplit` can inherit the MCMC-related arguments from the `run_model` function via `res`, or we can specify these arguments anew. Likewise, the console prints the progress of simulations and the number of node-splitting models to run. There are 8 such models (the message in red), and each one of these models will also be updated until convergence:
 
 ```{r node_console, echo=FALSE, out.width = "50%", out.height = "30%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/node_console.png")
 ```
-
 Next, we insert `node` into the function `nodesplit_plot` to get the necessary results both in **tabular** and **graphical format**:
 
 ```{r, results='hide', message=FALSE, eval=FALSE}
@@ -508,7 +506,6 @@ ume_plot(full = res,
 ```{r ume_tab, echo=FALSE, out.width = "90%", out.height = "60%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/ume_tab.png")
 ```
-
 Looking at the last two tables, we notice no material difference between the network meta-analysis and the unrelated mean effects model, and hence, the message in red at the start of the console that **There is little to choose between the two models.** Therefore, consistency may hold globally.
 
 Again, you can export each table to an *xlsx* file at your working directory by inserting the argument `save_xls = TRUE` in the `ume_plot` function.
@@ -550,7 +547,6 @@ reg <- run_metareg(full = res,
 ```{r reg_console, echo=FALSE, out.width = "50%", out.height = "30%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/reg_console.png")
 ```
-
 As you may have guessed by now, we insert `reg` into the function `metareg_plot` to obtain several results in **tabular and graphical format**:
 
 ```{r, results='hide', message=FALSE, eval=FALSE}

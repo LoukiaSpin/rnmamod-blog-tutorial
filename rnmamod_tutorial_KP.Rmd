@@ -76,13 +76,12 @@ knitr::include_graphics("./gigures/excluded.png")
 
 ### Imputation
 
-[Figure 3](#fig:imputed) illustrates the **imputation**: all missing participants 
-in the first intervention have been assumed to have experienced improvement of 
-their symptoms (and thus, they left the trial prematurely), whilst all missing 
-participants in the second intervention have been assumed to have experienced 
-deterioration of their symptoms (and thus, they left the trial prematurely). 
+[Figure 3](#fig:imputed) illustrates the **imputation** of missing participants in two interventions.
+In in the first intervention, it is assumed that all missing participants experienced symptom improvement 
+and thus, left the trial prematurely. In the second intervention, it is assumed that all missing 
+participants experienced symptom deterioration and left the trial prematurely. 
 Imputation implies adding the number of missing participants to the outcome 
-dictated by the corresponding scenario: to the number of events (improvement) in 
+based on the corresponding scenario: to the number of events (improvement) in 
 the first intervention, and to the number of non-events (deterioration) in the 
 second intervention. This method maintains the randomised sample but takes the 
 missingness scenario for granted. Without following the missing participants to 

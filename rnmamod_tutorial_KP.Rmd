@@ -36,13 +36,10 @@ PRISMA extension statement [(Hutton et al., 2015)](https://pubmed.ncbi.nlm.nih.g
 
 You are leading a research project involving a systematic review
 of multiple interventions for a specific health condition and patient population.
-You have put in a lot of effort to establish a high-standards  protocol, registered it with [PROSPERO register](https://www.crd.york.ac.uk/prospero/) and completed the data extraction.
+You have put in a lot of effort to establish a high-standards  protocol, registered it with [PROSPERO register](https://www.crd.york.ac.uk/prospero/) and 
+completed the data extraction.
 
-The data extraction is coming to an end, and you are looking forward to uncovering 
-the best interventions for the investigated condition. Everybody is motivated, and 
-overwhelmed, yet quite stressed to keep up with the deadlines of the project. You 
-pour some coffee in your favorite mug and you start the analysis. You notice that 
-many eligible trials report to have missing participants. 
+While reviewing the extracted data, you notice that many eligible trials report having missing participants. 
 **How are you going to proceed with the analysis?** 
 
 ## The good, the bad, and the ugly 

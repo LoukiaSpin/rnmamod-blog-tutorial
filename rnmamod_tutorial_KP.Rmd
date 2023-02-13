@@ -105,27 +105,25 @@ this *good guess* into the results. We have good news on that; just, keep readin
 
 ### Pattern-mixture model
 
-The last member of the squad of methods for missing participants in meta-analysis
-is the pattern-mixture model. The **pattern-mixture model** circumvents the limitations 
-of exclusion and imputation elegantly: it adjusts, rather than fixes, the average 
-outcome (here, the risk of event) to the assumed missingness mechanism, and propagates 
+The last member of the squad of methods for missing participants in (network) meta-analysis
+is the pattern-mixture model. The **pattern-mixture model** elegantly adjusts, rather than fixes, the average 
+outcome (in this case, the risk of event) to the assumed missingness mechanism, and propagates 
 this assumption to the standard error of the estimated intervention effect, while 
-maintaining the randomised sample. It also allows the assumption about the missing
-mechanism to differ between the interventions or across the trials. Therefore, the 
-pattern-mixture model offers a flexible modelling framework to handle missing participants 
-in meta-analysis properly. If exclusion, imputation and pattern-mixture model were 
+maintaining the randomised sample. It allows for different assumptions about the missing
+mechanism  between interventions or across the trials, offering a flexible framework for properly handling missing participants 
+in (network) meta-analysis. If exclusion, imputation and pattern-mixture model were 
 characters from the epic Western spaghetti film, *The Good, the Bad and the Ugly*, 
-the correspondence of who would be who is quite obvious.
+the correspondence of who would be who is rather clear.
 
-[Figure 4](#fig:imor) illustrates two normal distributions of the 
-**informative missingness odds ratio (IMOR)**, a central parameter in the 
-pattern-mixture model for a binary outcome. IMOR resembles the odds ratio for
-two interventions: it compares the odds of an event in missing participants with 
-the odds of an event in completers. IMOR equal to 1 coincides with the MAR mechanism 
-(i.e., no difference in the compared groups), and IMOR different from 1 implies 
+[Figure 4](#fig:imor) shows two normal distributions of the 
+**informative missingness odds ratio (IMOR)**, which is a central parameter in the 
+pattern-mixture model for a binary outcome. IMOR is similar to the odds ratio for
+two interventions, as it compares the odds of an event in missing participants with 
+the odds of an event in completers. An IMOR equal to 1 indicates the MAR mechanism 
+(i.e., no difference in the compared groups), and an IMOR different from 1 implies 
 the MNAR mechanism (i.e., the compared groups differ). 
-As an illustration, we have considered a different IMOR distribution for each 
-intervention: the first intervention is assumed to have *on average* twice the 
+To illustrate this, we have considered a different IMOR distribution for each 
+intervention. For the the first intervention is assumed to have *on average* twice the 
 odds of an event in completers than that in missing participants (the mode), with 
 other scenarios being less and less likely to occur as we deviate from the mode. 
 On the contrary, the second intervention is assumed to have on average twice 

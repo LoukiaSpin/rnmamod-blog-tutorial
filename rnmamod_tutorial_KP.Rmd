@@ -82,15 +82,15 @@ and thus, left the trial prematurely. In the second intervention, it is assumed 
 participants experienced symptom deterioration and left the trial prematurely. 
 Imputation implies adding the number of missing participants to the outcome 
 based on the corresponding scenario: to the number of events (improvement) in 
-the first intervention, and to the number of non-events (deterioration) in the 
-second intervention. This method maintains the randomised sample but takes the 
-missingness scenario for granted. Without following the missing participants to 
+the first intervention and to the number of non-events (deterioration) in the 
+second intervention. This method preserves the randomised sample but assumes the 
+missingness scenario. Without following the missing participants to 
 record their outcome, we cannot know the **true missingness mechanism**. Hence, 
 any assumptions we make about the missingness mechanism should naturally propagate 
 in the estimation of the intervention effect by increasing its standard error. 
 Imputation rears its ugly head by 'treating' the missing participants as observed, 
-increasing the risk to estimate a biased intervention effect and draw spurious 
-conclusions regarding the statistical significance.
+increasing the risk to estimate a biased intervention effect and draw erroneous
+statistical significance conclusions.
 
 ```{r imputed, echo=FALSE, out.width = "50%", out.height = "15%", fig.align="center", fig.cap = "Figure 3: Imputing missing participants making different scenarios in each intervention", fig.alt=""}
 knitr::include_graphics("./gigures/imputed.png")

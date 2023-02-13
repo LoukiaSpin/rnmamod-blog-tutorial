@@ -123,15 +123,15 @@ the odds of an event in completers. An IMOR equal to 1 indicates the MAR mechani
 (i.e., no difference in the compared groups), and an IMOR different from 1 implies 
 the MNAR mechanism (i.e., the compared groups differ). 
 To illustrate this, we have considered a different IMOR distribution for each 
-intervention. For the the first intervention is assumed to have *on average* twice the 
-odds of an event in completers than that in missing participants (the mode), with 
-other scenarios being less and less likely to occur as we deviate from the mode. 
-On the contrary, the second intervention is assumed to have on average twice 
-the odds of an event in missing participants than that in completers (the mode), 
-again, with other scenarios being less and less likely to occur as we deviate 
-from the mode. An important technical detail is that the normal distributions 
+intervention. For the the first intervention, we assumed that, *on average*, the odds of an event  
+in completers were twice that in missing participants (the mode), with 
+other scenarios being less likely to occur as we deviate from the mode. 
+For the second intervention, we assumed that, on average, 
+the odds of an event in missing participants were twice that in completers (the mode), 
+again, with other scenarios being less likely to occur as we deviate 
+from the mode. It is important to note that the normal distributions 
 presented in [Figure 4](#fig:imor) are implied for the IMOR in the logarithmic 
-scale, also commonly considered when estimating the odds ratio. 
+scale, which is commonly used when estimating the odds ratio. 
 
 ```{r imor, echo=FALSE, out.width = "55%", out.height = "20%", fig.align="center", fig.cap = "Figure 4: The IMOR parameter under different scenarios for each intervention", fig.alt=""}
 knitr::include_graphics("./gigures/imor.png")

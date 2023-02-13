@@ -278,11 +278,11 @@ knitr::include_graphics("./gigures/run_model.png")
 
 > Specifying carefully the arguments of the `run_model` function is essential for the subsequent analyses to yield sensible results. This requires thorough consideration of the proper effect measure (`measure`), the meta-analysis model (`model`), the structure of the missingness parameter (`assumption`), the prior distribution for the heterogeneity parameter (`heter_prior`), the missingness mechanism (`mean_misspar` and `var_misspar`), the direction of the outcome (`D`), and the necessary tuning parameters to run Markov chain Monte Carlo simulations using JAGS (`n_chains`, `n_iter`, `n_burning`, and `n_thin`). Refer to the documentation of the function by typing `?run_model`.
 
-Now we can use `res` in the arguments of the other model functions to conduct the subsequent analyses, and visualise the results. The *journey* has just begun.
+Now we can use `res` in the arguments of the other model functions to conduct the subsequent analyses, and visualize the results. The *journey* has just begun.
 
 ### Markov chain Monte Carlo diagnostics
 
-We will use the homonym function, `mcmc_diagnostic`, to find out how our model fared in terms of convergence. 
+Use the `mcmc_diagnostic` function, to check the model's convergence. 
 
 ```{r, results='hide', message=FALSE, eval=FALSE}
 # Display diagnostics for Bayesian methods
@@ -290,19 +290,15 @@ mcmc_diagnostics(net = res,
                  par = c("EM", "tau"))
 ```
 
-The function prints on the console a message on *good diagnostic practices* (in red), followed by the names of panel plots and tables on several monitored parameters. 
-
 ```{r mcmc_diagn_console, echo=FALSE, out.width = "100%", out.height = "70%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/mcmc_diagn_console.png")
 ```
-
 Here, we illustrate a panel of bar plots on the log odds ratio for all possible comparisons in the network (x-axis):
 
 ```{r mcmc_effect, echo=FALSE, out.width = "100%", out.height = "70%", fig.align="center", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/mcmc_effect.png")
 ```
-
-Then `mcmc_diagnostics` opens a browser with a panel of diagnostic plots (trace, density, and autocorrelation) for the monitored parameters specified in the `par` argument (here, the log odds ratio for all possible pairwise comparisons, `"EM"`, and the common between-trial standard deviation, `"tau"`). Type `res$jagsfit` to access all monitored parameters from the `run_model` function. The HTML file is created thanks to the `mcmcplot` function of the R-package [mcmcplots](https://CRAN.R-project.org/package=mcmcplots).
+It displays diagnostic plots (trace, density, and autocorrelation) for the monitored parameters specified in the `par` argument (here, the log odds ratio for all possible pairwise comparisons, `"EM"`, and the common between-trial standard deviation, `"tau"`). Access all monitored parameters from `run_model` using `res$jagsfit`. 
 
 ```{r mcmc_browser, echo=FALSE, out.width = "100%", out.height = "70%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/mcmc_browser.png")

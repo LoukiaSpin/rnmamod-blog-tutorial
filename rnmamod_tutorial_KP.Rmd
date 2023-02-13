@@ -64,14 +64,10 @@ distribution to describe the association between the missing and completers' out
 
 ### Exclusion
 
-As you may have guessed, **exclusion** and **imputation** are suboptimal methods 
-to handle missing participants. **Exclusion** is illustrated in 
-[Figure 2](#fig:excluded): missing participants in both interventions 
-are removed from the dataset before conducting the analysis. This methods is 
-inappropriate for the goals of our study, where we aim to draw conclusions for the 
-whole randomised sample, as it reduces the sample to those participants who remained 
-in the trial. Consequently, the power to detect a statistically significant 
-association is also reduced. Moreover, if the missingness mechanism is not M(C)AR, 
+Both **exclusion** and **imputation** are suboptimal methods 
+in handling missing participants. **Exclusion**, as shown in 
+[Figure 2](#fig:excluded), is not appropriate as it reduced the sample to those participants who remained
+in the trial and decreases the power to detect significant associations. Moreover, if the missingness mechanism is not M(C)AR, 
 the risk of estimating a biased intervention effect (e.g., odds ratio) is imminent. 
 
 ```{r excluded, echo=FALSE, out.width = "50%", out.height = "15%", fig.align="center", fig.cap = "Figure 2: Excluding missing participants from both interventions", fig.alt=""}

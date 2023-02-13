@@ -160,8 +160,7 @@ However, we recommend installing the **development version** to experience the l
 install.packages("devtools")
 devtools::install_github("LoukiaSpin/rnmamod")
 ```
-
-We will use the dataset of [Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/) that includes 21 trials comparing seven pharmacological interventions with each other and placebo in chronic obstructive pulmonary disease (COPD) patients. We are interested in whether the patients experienced COPD exacerbation after receiving the randomised intervention. Run `head(nma.baker2009)` to see the first six trials, or `nma.baker2009` to glance at the whole dataset. The dataset has the one-trial-per-row format, which is the typical format encountered in models written in the BUGS language. 
+We will use the dataset of [Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/), which includes 21 trials comparing seven pharmacological interventions and placebo in chronic obstructive pulmonary disease (COPD) patients. The aim is to determine if patients experienced COPD exacerbation after receiving the randomised intervention. Run `head(nma.baker2009)` to see the first six trials, or `nma.baker2009` to see the entire dataset. The dataset has one-trial-per-row format, which is the typical format encountered in BUGS language models. 
 
 ```{r, results='hide'}
 head(nma.baker2009)
@@ -175,7 +174,6 @@ head(nma.baker2009)
 ```
 
 ### Network plot and evidence description
- 
 Let's create the network plot using the `netplot` function (type `?netplot` to learn more):
   
 ```{r, results='hide', fig.show='hide'}

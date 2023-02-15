@@ -1,5 +1,5 @@
 ---
-title: "Peek-a-boo: Evidence synthesis with the rnmamod R package"
+title: "Peek-a-boo: Evidence synthesis using the rnmamod R package"
 author: "Loukia M Spineli, Chrysostomos Kalyvas, Katerina Papadimitropoulou"
 date: "2023-01-28"
 output: html_document

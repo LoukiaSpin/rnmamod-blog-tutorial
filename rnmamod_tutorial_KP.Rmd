@@ -578,13 +578,15 @@ As a reminder, you may insert the argument `save_xls = TRUE` in the `metareg_plo
 ```{r reg_interval, echo=FALSE, out.width = "100%", out.height = "60%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/reg_interval.png")
 ```
-
-Just as with the `forestplot` function, the 95% credible intervals (black lines) overlay the 95% prediction intervals (coloured lines) in plot **A)**. The odds ratios pertain to comparisons with budesidone, the selected comparator intervention (`compar = "BUDE"`). In both plots, the interventions are sorted from best to worst based on their SUCRA value (see plot **B)**).
+Just like the `forestplot` function, the 95% credible intervals (black lines) overlap the 95% prediction intervals (coloured lines) in plot **A)**. The odds ratios refer to comparisons with budesidone, the selected comparator intervention (`compar = "BUDE"`). In both plots, the interventions are sorted from best to worst based on their SUCRA value (see plot **B)**).
 
 ```{r reg_sucra, echo=FALSE, out.width = "100%", out.height = "160%", fig.align="center", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/reg_sucra.png")
 ```
-
 The hierarchy of the interventions does not materially change  when comparing the two models regarding the SUCRA values for the publication year 2002.
 
-*For any questions about the tutorial and the rnmamod R package, feel free to contact [Spineli.Loukia@mh-hannover.de](mailto:Spineli.Loukia@mh-hannover.de). For information about the author, visit [loukiaspineli.netlify.app](https://loukiaspineli.netlify.app/).*
+### Conclusion  
+
+The main functionalities of `rnmamod` have been presented in this tutorial. The interested reader is prompted to browse through the [manual](https://cran.r-project.org/web/packages/rnmamod/rnmamod.pdf) to dive in the technical details of the functions.
+
+*For any questions about the tutorial and the rnmamod R package, feel free to contact [Spineli.Loukia@mh-hannover.de](mailto:Spineli.Loukia@mh-hannover.de). For any information about the author, visit [loukiaspineli.netlify.app](https://loukiaspineli.netlify.app/).*

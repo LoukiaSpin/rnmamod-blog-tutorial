@@ -156,6 +156,7 @@ However, we recommend installing the **development version** to experience the l
 install.packages("devtools")
 devtools::install_github("LoukiaSpin/rnmamod")
 ```
+
 We will use the dataset of [Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/), which includes 21 trials comparing seven pharmacological interventions and placebo in chronic obstructive pulmonary disease (COPD) patients. The aim is to determine if patients experienced COPD exacerbation after receiving the randomized intervention. Run `head(nma.baker2009)` to see the first six trials, or `nma.baker2009` to see the entire dataset. The dataset has one-trial-per-row format, which is the typical format encountered in BUGS language models. 
 
 ```{r, results='hide'}
@@ -209,8 +210,7 @@ knitr::include_graphics("./gigures/observed_comparisons.png")
 
 ### Mapping the evidence on missing participants
 
-The `nma.baker2009` dataset was selected due to its high number of missing participants in most trials, interventions and comparisons. Use the `heatmap_missing_dataset` function to view the distribution of missing participants (in percent) in the dataset. Most trials have interventions with high level of missingness, 
-with only a few trials having zero or low missingness rate.
+The `nma.baker2009` dataset was selected due to its high number of missing participants in most trials, interventions and comparisons. Use the `heatmap_missing_dataset` function to view the distribution of missing participants (in percent) in the dataset. Most trials have interventions with high level of missingness, with only a few trials having zero or low missingness rate.
 
 ```{r, results='hide', fig.show='hide'}
 # Abbreviated interventions (in the order they appear in the datasets)
@@ -240,6 +240,7 @@ heatmap_missing_network(data = nma.baker2009,
 ```{r missing_network, echo=FALSE, out.width = "100%", out.height = "50%", fig.align="center", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/missing_network.png")
 ```
+
 We can immediately spot the comparison with the lowest median of missing participants: tiotropium versus formoterol. 
 
 ### The fine architecture of the rnmamod package
@@ -295,15 +296,22 @@ mcmc_diagnostics(net = res,
                  par = c("EM", "tau"))
 ```
 
+<!---
 ```{r mcmc_diagn_console, echo=FALSE, out.width = "100%", out.height = "70%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/mcmc_diagn_console.png")
 ```
+--->
+
 Here, we illustrate a panel of bar plots on the log odds ratio for all possible comparisons in the network (x-axis):
 
 ```{r mcmc_effect, echo=FALSE, out.width = "100%", out.height = "70%", fig.align="center", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/mcmc_effect.png")
 ```
-It displays diagnostic plots (trace, density, and autocorrelation) for the monitored parameters specified in the `par` argument (here, the log odds ratio for all possible pairwise comparisons, `"EM"`, and the common between-trial standard deviation, `"tau"`). Access all monitored parameters from `run_model` using `res$jagsfit`. The HTML file is created thanks to the `mcmcplot` function of the [mcmcplots](https://CRAN.R-project.org/package=mcmcplots) R package.
+
+It displays diagnostic plots (trace, density, and autocorrelation) for the monitored parameters specified in the `par` argument (here, the log odds ratio for all possible pairwise comparisons, 
+`"EM"`, and the common between-trial standard deviation, `"tau"`). Access all monitored parameters 
+from `run_model` using `res$jagsfit`. The HTML file is created thanks to the `mcmcplot` function of 
+the [mcmcplots](https://CRAN.R-project.org/package=mcmcplots) R package.
 
 ```{r mcmc_browser, echo=FALSE, out.width = "100%", out.height = "70%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/mcmc_browser.png")
@@ -328,7 +336,7 @@ league_heatmap(full1 = res,
 knitr::include_graphics("./gigures/league_baker.png")
 ```
 
-The table is read as row versus column and shows the (posterior mean) odds ratio and 95% credible interval for each comparison. The interventions are sorted in decreasing order by their posterior mean SUCRA value shown in the main diagonal. The larger the treatment effect, the darker the color shade. 
+The table is read as row versus column and shows the (posterior median) odds ratio and 95% credible interval for each comparison. The interventions are sorted in decreasing order by their posterior mean SUCRA value shown in the main diagonal. The larger the treatment effect, the darker the color shade. 
 The `league_heatmap` function can also display the treatment effects from two outcomes or a selected
 subset of interventions (ideal for huge networks). 
 
@@ -355,7 +363,7 @@ A compact alternative to the league table is to create a forest plot of comparis
 
 ```{r, fig.show='hide', eval=FALSE}
 # Abbreviated interventions (in the order they appear in the datasets)
-abbr_interv_names <- c("placebo", "BUDE", "BUDE plus FORM", "FLUT", "FLUT plus SALM", "FORM", "SALM", "TIOT")
+abbr_interv_names <- c("placebo", "BUDE", "BUDE+FORM", "FLUT", "FLUT+SALM", "FORM", "SALM", "TIOT")
 
 # The heatmap league table for prediction 
 forestplot(full = res, 
@@ -392,21 +400,25 @@ The interventions are sorted from best to worst based on their SUCRA value (the 
 The functions `run_series_meta` and `series_meta_plot` are designed to explore the implications of assuming consistency and common heterogeneity, as opposed to performing pairwise meta-analysis separately for each observed comparison in the network.
 
 First, use the `run_series_meta` function to conduct separate pairwise meta-analyses for all observed comparisons in the network:
+
 ```{r, results='hide', message=FALSE, eval=FALSE}
 # Run separate pairwise meta-analyses
 meta <- run_series_meta(full = res)
 ```
-Here, the function inherits the arguments `n_chains`, `n_iter`, `n_burning`, and `n_thin` from the `run_model` function via `res`; however, you can also specify these arguments anew. Just as with the `run_model`, the console prints the progress of simulations together with the number of models to run: there are 15 observed comparisons in the network; hence, the console prints this message (in red), followed by a progress bar for each analysis alongside the model update until convergence:
+
+Here, the function inherits the arguments `n_chains`, `n_iter`, `n_burning`, and `n_thin` from the `run_model` function via `res`; however, you can also specify these arguments anew. 
+<!---Just as with the `run_model`, the console prints the progress of simulations together with the number of models to run: there are 15 observed comparisons in the network; hence, the console prints this message (in red), followed by a progress bar for each analysis alongside the model update until convergence:
 
 ```{r run_meta, echo=FALSE, out.width = "60%", out.height = "30%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/run_meta.png")
 ```
-
-Next, we insert `meta` into the function `series_meta_plot` to experience the visualisation toolkit for this analysis:
+--->
+ 
+Next, we insert `meta` into the function `series_meta_plot` to experience the visualization toolkit for this analysis:
 
 ```{r, results='hide', message=FALSE, eval=FALSE}
 # Abbreviated interventions (in the order they appear in the datasets)
-abbr_interv_names <- c("placebo", "BUDE", "BUDE plus FORM", "FLUT", "FLUT plus SALM", "FORM", "SALM", "TIOT")
+abbr_interv_names <- c("placebo", "BUDE", "BUDE+FORM", "FLUT", "FLUT+SALM", "FORM", "SALM", "TIOT")
 
 # End-user-ready results for a series of pairwise meta-analyses
 series_meta_plot(full = res,
@@ -414,11 +426,13 @@ series_meta_plot(full = res,
                  drug_names = abbr_interv_names)
 ```
 
-This function returns the same results in **two formats**: (i) a **table** that is printed on the console, and (ii) a **panel of forest plots**.
+This function returns the same results in **two formats**: (i) a **table** that is printed on the console, and (ii) a **panel of forest plots**. Below, we present the plots.
 
+<!---
 ```{r meta_baker_tab, echo=FALSE, out.width = "100%", out.height = "60%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/meta_baker_tab.png")
 ```
+--->
 
 ```{r meta_baker, echo=FALSE, out.width = "100%", out.height = "60%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/meta_baker.png")

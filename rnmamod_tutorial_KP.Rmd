@@ -296,12 +296,6 @@ mcmc_diagnostics(net = res,
                  par = c("EM", "tau"))
 ```
 
-<!---
-```{r mcmc_diagn_console, echo=FALSE, out.width = "100%", out.height = "70%", fig.align="left", fig.cap = "", fig.alt=""}
-knitr::include_graphics("./gigures/mcmc_diagn_console.png")
-```
---->
-
 Here, we illustrate a panel of bar plots on the log odds ratio for all possible comparisons in the network (x-axis):
 
 ```{r mcmc_effect, echo=FALSE, out.width = "100%", out.height = "70%", fig.align="center", fig.cap = "", fig.alt=""}
@@ -407,13 +401,7 @@ meta <- run_series_meta(full = res)
 ```
 
 Here, the function inherits the arguments `n_chains`, `n_iter`, `n_burning`, and `n_thin` from the `run_model` function via `res`; however, you can also specify these arguments anew. 
-<!---Just as with the `run_model`, the console prints the progress of simulations together with the number of models to run: there are 15 observed comparisons in the network; hence, the console prints this message (in red), followed by a progress bar for each analysis alongside the model update until convergence:
 
-```{r run_meta, echo=FALSE, out.width = "60%", out.height = "30%", fig.align="left", fig.cap = "", fig.alt=""}
-knitr::include_graphics("./gigures/run_meta.png")
-```
---->
- 
 Next, we insert `meta` into the function `series_meta_plot` to experience the visualization toolkit for this analysis:
 
 ```{r, results='hide', message=FALSE, eval=FALSE}
@@ -427,12 +415,6 @@ series_meta_plot(full = res,
 ```
 
 This function returns the same results in **two formats**: (i) a **table** that is printed on the console, and (ii) a **panel of forest plots**. Below, we present the plots.
-
-<!---
-```{r meta_baker_tab, echo=FALSE, out.width = "100%", out.height = "60%", fig.align="left", fig.cap = "", fig.alt=""}
-knitr::include_graphics("./gigures/meta_baker_tab.png")
-```
---->
 
 ```{r meta_baker, echo=FALSE, out.width = "100%", out.height = "60%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/meta_baker.png")
@@ -459,13 +441,6 @@ node <- run_nodesplit(full = res)
 
 Just as with the `run_series_meta` function, `run_nodesplit` can inherit the MCMC-related arguments from the `run_model` function via `res`, or we can specify these arguments anew. 
 
-<!--- Likewise, the console prints the progress of simulations and the number of node-splitting models to run. There are 8 such models (the message in red), and each one of these models will also be updated until convergence:
-
-```{r node_console, echo=FALSE, out.width = "50%", out.height = "30%", fig.align="left", fig.cap = "", fig.alt=""}
-knitr::include_graphics("./gigures/node_console.png")
-```
---->
-
 Next, we insert `node` into the function `nodesplit_plot` to get the necessary results both in **tabular** and **graphical format**:
 
 ```{r, results='hide', message=FALSE, eval=FALSE}
@@ -477,13 +452,6 @@ nodesplit_plot(full = res,
                node = node,
                drug_names = abbr_interv_names)
 ```
-
-<!---
-```{r node_tab, echo=FALSE, out.width = "110%", out.height = "80%", fig.align="left", fig.cap = "", fig.alt=""}
-knitr::include_graphics("./gigures/node_tab.png")
-```
-
-Just as with the `series_meta_plot` function, you can export each table to an *xlsx* file at your working directory by inserting the argument `save_xls = TRUE` in the `nodesplit_plot` function.--->
 
 The first graph is a panel of interval plots to check consistency through the inconsistency factor (the difference between direct and indirect estimate):
 
@@ -508,15 +476,9 @@ This approach boils down to comparing the network meta-analysis model with a ser
 The `run_ume` function conducts the unrelated mean effects model of [Dias and colleagues](https://pubmed.ncbi.nlm.nih.gov/23804508/):
 
 ```{r, results='hide', message=FALSE, eval=FALSE}
-# Run the unrelated means effect model
+# Run the unrelated mean effects model
 ume <- run_ume(full = res)
 ```
-
-<!---
-```{r ume_console, echo=FALSE, out.width = "50%", out.height = "30%", fig.align="left", fig.cap = "", fig.alt=""}
-knitr::include_graphics("./gigures/ume_console.png")
-```
---->
 
 Next, we insert `ume` into the function `ume_plot` to shed light on the validity of consistency globally through a variety of results in **tabular and graphical format**:
 
@@ -529,16 +491,6 @@ ume_plot(full = res,
          ume = ume,
          drug_names = abbr_interv_names)
 ```
-
-<!---
-```{r ume_tab, echo=FALSE, out.width = "90%", out.height = "60%", fig.align="left", fig.cap = "", fig.alt=""}
-knitr::include_graphics("./gigures/ume_tab.png")
-```
-
-Looking at the last two tables, we notice no material difference between the network meta-analysis and the unrelated mean effects model, and hence, the message in red at the start of the console that **There is little to choose between the two models.** Therefore, consistency may hold globally.
-
-Again, you can export each table to an *xlsx* file at your working directory by inserting the argument `save_xls = TRUE` in the `ume_plot` function.
---->
 
 The first panel of graphs consists of the scatterplot (left) and the Bland-Altman plot (right) on the posterior mean deviance under the network meta-analysis and unrelated mean effects model:
 
@@ -576,12 +528,6 @@ reg <- run_metareg(full = res,
                    covar_assumption = "exchangeable")
 ```
 
-<!---
-```{r reg_console, echo=FALSE, out.width = "50%", out.height = "30%", fig.align="left", fig.cap = "", fig.alt=""}
-knitr::include_graphics("./gigures/reg_console.png")
-```
---->
-
 As you may have guessed by now, we insert `reg` into the function `metareg_plot` to obtain several results in **tabular and graphical format**. We will glimpse into the plots:
 
 ```{r, results='hide', message=FALSE, eval=FALSE}
@@ -595,26 +541,6 @@ metareg_plot(full = res,
              cov_value = list(2002, "Publication year"),
              drug_names = abbr_interv_names)
 ```
-
-<!---
-In case you were wondering *why a simulation progress appears on the R console*, the posterior mean and standard deviation of the basic parameters and corresponding regression coefficients (as estimated from `run_metareg`) are inserted into the BUGS code to obtain the posterior distribution of SUCRA at the selected value of the covariate (`cov_value`). 
-
-```{r reg_tab1, echo=FALSE, out.width = "60%", out.height = "30%", fig.align="left", fig.cap = "", fig.alt=""}
-knitr::include_graphics("./gigures/reg_tab1.png")
-```
-
-```{r reg_tab2, echo=FALSE, out.width = "90%", out.height = "70%", fig.align="left", fig.cap = "", fig.alt=""}
-knitr::include_graphics("./gigures/reg_tab2.png")
-```
-
-```{r reg_tab3, echo=FALSE, out.width = "90%", out.height = "70%", fig.align="left", fig.cap = "", fig.alt=""}
-knitr::include_graphics("./gigures/reg_tab3.png")
-```
-
-Overall, the network meta-regression results do not seem to differ substantially from the network meta-analysis results. The posterior mean of the regression coefficient for each intervention (last table) is another hint that the intervention effects may not change over time systematically: the ratio of odds ratios between two subsequent years almost equals 1.
-
-As a reminder, you may insert the argument `save_xls = TRUE` in the `metareg_plot` function to export each table to an *xlsx* file at your working directory.
---->
 
 ```{r reg_interval, echo=FALSE, out.width = "100%", out.height = "60%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/reg_interval.png")

@@ -100,9 +100,9 @@ this *good guess* into the results. We have good news on that; just, keep readin
 ### Pattern-mixture model
 
 The last member of the squad of methods for missing participants in (network) meta-analysis
-is the pattern-mixture model. The **pattern-mixture model** elegantly adjusts, rather than fixes, the average 
-outcome (in this case, the risk of event) to the assumed missingness mechanism, and propagates 
-this assumption to the standard error of the estimated intervention effect, while 
+is the pattern-mixture model. The **pattern-mixture model** elegantly adjusts, rather than fixes, 
+the average outcome (in this case, the risk of event) to the assumed missingness mechanism, and 
+propagates this assumption to the standard error of the estimated intervention effect, while 
 maintaining the randomized sample. It allows for different assumptions about the missing
 mechanism  between interventions or across the trials, offering a flexible framework for properly 
 handling missing participants in (network) meta-analysis. If exclusion, imputation and pattern-mixture 
@@ -213,7 +213,7 @@ knitr::include_graphics("./gigures/observed_comparisons.png")
 The `nma.baker2009` dataset was selected due to its high number of missing participants in most trials, interventions and comparisons. Use the `heatmap_missing_dataset` function to view the distribution of missing participants (in percent) in the dataset. Most trials have interventions with high level of missingness, with only a few trials having zero or low missingness rate.
 
 ```{r, results='hide', fig.show='hide'}
-# Abbreviated interventions (in the order they appear in the datasets)
+# Abbreviated interventions (in the order they appear in the dataset)
 abbr_interv_names <- c("placebo", "BUDE", "BUDE plus FORM", "FLUT", "FLUT plus SALM", "FORM", "SALM", "TIOT")
 
 # Create the heatmap of % missing participants for each trial and arm
@@ -362,10 +362,10 @@ knitr::include_graphics("./gigures/league_baker_pred.png")
 A compact alternative to the league table is to create a forest plot of comparisons with a selected comparator intervention. For illustration, we have selected budesidone as the reference and we ran the following code to obtain the forest plot where results on estimation and prediction co-appear:
 
 ```{r, fig.show='hide', eval=FALSE}
-# Abbreviated interventions (in the order they appear in the datasets)
+# Abbreviated interventions (in the order they appear in the dataset)
 abbr_interv_names <- c("placebo", "BUDE", "BUDE+FORM", "FLUT", "FLUT+SALM", "FORM", "SALM", "TIOT")
 
-# The heatmap league table for prediction 
+# Forest plot for estimation & prediction 
 forestplot(full = res, 
            compar = "BUDE",
            drug_names = abbr_interv_names)
@@ -417,7 +417,7 @@ knitr::include_graphics("./gigures/run_meta.png")
 Next, we insert `meta` into the function `series_meta_plot` to experience the visualization toolkit for this analysis:
 
 ```{r, results='hide', message=FALSE, eval=FALSE}
-# Abbreviated interventions (in the order they appear in the datasets)
+# Abbreviated interventions (in the order they appear in the dataset)
 abbr_interv_names <- c("placebo", "BUDE", "BUDE+FORM", "FLUT", "FLUT+SALM", "FORM", "SALM", "TIOT")
 
 # End-user-ready results for a series of pairwise meta-analyses
@@ -440,11 +440,12 @@ knitr::include_graphics("./gigures/meta_baker.png")
 
 Network meta-analysis produced more precise results than pairwise meta-analysis for all observed comparisons (plot **A)**). The benefits of conducting network meta-analysis for this example are also evident for the heterogeneity parameter, which was estimated at a reasonable level and with greater precision than in any pairwise meta-analysis (plot **B)**): blue vertical lines refer to the posterior median and 95% credible interval of the common heterogeneity parameter in network meta-analysis. 
 
-You can export the table to an *xlsx* file in your working directory by adding the argument `save_xls = TRUE` in the `series_meta_plot` function.
+You can export the table to an *xlsx* file in your working directory by adding the argument `save_xls = TRUE` in the `series_meta_plot` function. This argument is also found in the following functions that summarize and present the model results: `nodesplit_plot`, `ume_plot`, and `metareg_plot`.
 
 > Note that comparing network meta-analysis with pairwise meta-analysis results should **never** be used to draw conclusions about the possibility of consistency assumption! There are specific tools designed to evaluate the consistency assumption. In the next part of the tutorial, we will introduce you to functions that offer local and global assessment of the consistency assumption.
 
 ### Consistency evaluation
+
 #### The node-splitting approach (local evaluation)
 
 Do you see at least one closed-loop of interventions in your network? Are these loops informed by two-arm trials only, or a combination of two-arm and multi-arm trials? If so, you must evaluate whether network meta-analysis produces sensible results under the consistency assumption or if there are loops with evidence of possible inconsistency. Our COPD network has several closed loops (see the network plot above).
@@ -455,16 +456,21 @@ The `run_nodesplit` function applies the [node-splitting approach](https://pubme
 # Run the node-splitting approach
 node <- run_nodesplit(full = res)
 ```
-Just as with the `run_series_meta` function, `run_nodesplit` can inherit the MCMC-related arguments from the `run_model` function via `res`, or we can specify these arguments anew. Likewise, the console prints the progress of simulations and the number of node-splitting models to run. There are 8 such models (the message in red), and each one of these models will also be updated until convergence:
+
+Just as with the `run_series_meta` function, `run_nodesplit` can inherit the MCMC-related arguments from the `run_model` function via `res`, or we can specify these arguments anew. 
+
+<!--- Likewise, the console prints the progress of simulations and the number of node-splitting models to run. There are 8 such models (the message in red), and each one of these models will also be updated until convergence:
 
 ```{r node_console, echo=FALSE, out.width = "50%", out.height = "30%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/node_console.png")
 ```
+--->
+
 Next, we insert `node` into the function `nodesplit_plot` to get the necessary results both in **tabular** and **graphical format**:
 
 ```{r, results='hide', message=FALSE, eval=FALSE}
-# Abbreviated interventions (in the order they appear in the datasets)
-abbr_interv_names <- c("placebo", "BUDE", "BUDE plus FORM", "FLUT", "FLUT plus SALM", "FORM", "SALM", "TIOT")
+# Abbreviated interventions (in the order they appear in the dataset)
+abbr_interv_names <- c("placebo", "BUDE", "BUDE+FORM", "FLUT", "FLUT+SALM", "FORM", "SALM", "TIOT")
 
 # End-user-ready results for the consistency evaluation locally
 nodesplit_plot(full = res,
@@ -472,11 +478,12 @@ nodesplit_plot(full = res,
                drug_names = abbr_interv_names)
 ```
 
+<!---
 ```{r node_tab, echo=FALSE, out.width = "110%", out.height = "80%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/node_tab.png")
 ```
 
-Just as with the `series_meta_plot` function, you can export each table to an *xlsx* file at your working directory by inserting the argument `save_xls = TRUE` in the `nodesplit_plot` function.
+Just as with the `series_meta_plot` function, you can export each table to an *xlsx* file at your working directory by inserting the argument `save_xls = TRUE` in the `nodesplit_plot` function.--->
 
 The first graph is a panel of interval plots to check consistency through the inconsistency factor (the difference between direct and indirect estimate):
 
@@ -496,7 +503,7 @@ Again, the split nodes have been sorted in ascending order of the deviance infor
 
 #### The unrelated mean effects model (global evaluation)
 
-This approach boils down to comparing the network meta-analysis model with a series of pairwise meta-analyses that share a common heterogeneity parameter and are performed in one step. These two models are compared regarding a set of goodness of fit measuress and relevant diagnostic plots. Let's dive in two functions devised for the global evaluation of consistency: `run_ume` and `ume_plot`. 
+This approach boils down to comparing the network meta-analysis model with a series of pairwise meta-analyses that share a common heterogeneity parameter and are performed in one step. These two models are compared regarding a set of goodness of fit measures and relevant diagnostic plots. Let's dive in two functions devised for the global evaluation of consistency: `run_ume` and `ume_plot`. 
 
 The `run_ume` function conducts the unrelated mean effects model of [Dias and colleagues](https://pubmed.ncbi.nlm.nih.gov/23804508/):
 
@@ -505,15 +512,17 @@ The `run_ume` function conducts the unrelated mean effects model of [Dias and co
 ume <- run_ume(full = res)
 ```
 
+<!---
 ```{r ume_console, echo=FALSE, out.width = "50%", out.height = "30%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/ume_console.png")
 ```
+--->
 
 Next, we insert `ume` into the function `ume_plot` to shed light on the validity of consistency globally through a variety of results in **tabular and graphical format**:
 
 ```{r, results='hide', message=FALSE, eval=FALSE}
-# Abbreviated interventions (in the order they appear in the datasets)
-abbr_interv_names <- c("placebo", "BUDE", "BUDE plus FORM", "FLUT", "FLUT plus SALM", "FORM", "SALM", "TIOT")
+# Abbreviated interventions (in the order they appear in the dataset)
+abbr_interv_names <- c("placebo", "BUDE", "BUDE+FORM", "FLUT", "FLUT+SALM", "FORM", "SALM", "TIOT")
 
 # End-user-ready results for the consistency evaluation globally
 ume_plot(full = res,
@@ -521,12 +530,15 @@ ume_plot(full = res,
          drug_names = abbr_interv_names)
 ```
 
+<!---
 ```{r ume_tab, echo=FALSE, out.width = "90%", out.height = "60%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/ume_tab.png")
 ```
+
 Looking at the last two tables, we notice no material difference between the network meta-analysis and the unrelated mean effects model, and hence, the message in red at the start of the console that **There is little to choose between the two models.** Therefore, consistency may hold globally.
 
 Again, you can export each table to an *xlsx* file at your working directory by inserting the argument `save_xls = TRUE` in the `ume_plot` function.
+--->
 
 The first panel of graphs consists of the scatterplot (left) and the Bland-Altman plot (right) on the posterior mean deviance under the network meta-analysis and unrelated mean effects model:
 
@@ -548,7 +560,9 @@ knitr::include_graphics("./gigures/ume_interval.png")
 
 ### Network meta-regression
 
-Last in the methods that evaluate the assumptions of network meta-analysis is network meta-regression. We will investigate whether the publication year may have a modification effect. In other words, do intervention effects change over time? We created the vector `cov` with the publication year of the trials in the order they appear in the dataset `nma.baker2009`. 
+Network meta-regression is another powerful tool to evaluate the assumptions of network meta-analysis. 
+We will investigate whether the intervention effects change over time. We created the vector `cov` with 
+the publication year of the trials in the order they appear in the dataset `nma.baker2009`. 
 
 Run the following code to conduct network meta-regression using the function `run_metareg`:
 
@@ -556,20 +570,23 @@ Run the following code to conduct network meta-regression using the function `ru
 # The year of publication
 cov <- c(1996, 1998, 1999, rep(2000, 2), 2001, rep(2002, 5), rep(2003, 2), rep(2005, 4), rep(c(2006, 2007), each = 2))
 
-# Run the unrelated means effect model
+# Run network meta-regression
 reg <- run_metareg(full = res,
                    covariate = cov,
                    covar_assumption = "exchangeable")
 ```
 
+<!---
 ```{r reg_console, echo=FALSE, out.width = "50%", out.height = "30%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/reg_console.png")
 ```
-As you may have guessed by now, we insert `reg` into the function `metareg_plot` to obtain several results in **tabular and graphical format**:
+--->
+
+As you may have guessed by now, we insert `reg` into the function `metareg_plot` to obtain several results in **tabular and graphical format**. We will glimpse into the plots:
 
 ```{r, results='hide', message=FALSE, eval=FALSE}
-# Abbreviated interventions (in the order they appear in the datasets)
-abbr_interv_names <- c("placebo", "BUDE", "BUDE plus FORM", "FLUT", "FLUT plus SALM", "FORM", "SALM", "TIOT")
+# Abbreviated interventions (in the order they appear in the dataset)
+abbr_interv_names <- c("placebo", "BUDE", "BUDE+FORM", "FLUT", "FLUT+SALM", "FORM", "SALM", "TIOT")
 
 # End-user-ready results for network meta-regression
 metareg_plot(full = res,
@@ -579,6 +596,7 @@ metareg_plot(full = res,
              drug_names = abbr_interv_names)
 ```
 
+<!---
 In case you were wondering *why a simulation progress appears on the R console*, the posterior mean and standard deviation of the basic parameters and corresponding regression coefficients (as estimated from `run_metareg`) are inserted into the BUGS code to obtain the posterior distribution of SUCRA at the selected value of the covariate (`cov_value`). 
 
 ```{r reg_tab1, echo=FALSE, out.width = "60%", out.height = "30%", fig.align="left", fig.cap = "", fig.alt=""}
@@ -596,19 +614,23 @@ knitr::include_graphics("./gigures/reg_tab3.png")
 Overall, the network meta-regression results do not seem to differ substantially from the network meta-analysis results. The posterior mean of the regression coefficient for each intervention (last table) is another hint that the intervention effects may not change over time systematically: the ratio of odds ratios between two subsequent years almost equals 1.
 
 As a reminder, you may insert the argument `save_xls = TRUE` in the `metareg_plot` function to export each table to an *xlsx* file at your working directory.
+--->
 
 ```{r reg_interval, echo=FALSE, out.width = "100%", out.height = "60%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/reg_interval.png")
 ```
-Just like the `forestplot` function, the 95% credible intervals (black lines) overlap the 95% prediction intervals (coloured lines) in plot **A)**. The odds ratios refer to comparisons with budesidone, the selected comparator intervention (`compar = "BUDE"`). In both plots, the interventions are sorted from best to worst based on their SUCRA value (see plot **B)**).
+
+The 95% credible intervals (black lines) overlap the 95% prediction intervals (colored lines) in plot **A)**. The odds ratios refer to comparisons with budesidone, the selected comparator intervention (`compar = "BUDE"`). In both plots, the interventions are sorted from best to worst based on their SUCRA value (see plot **B)**).
 
 ```{r reg_sucra, echo=FALSE, out.width = "100%", out.height = "160%", fig.align="center", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/reg_sucra.png")
 ```
-The hierarchy of the interventions does not materially change  when comparing the two models regarding the SUCRA values for the publication year 2002.
+
+The hierarchy of the interventions does not materially change when comparing the two models regarding the SUCRA values for the publication year 2002.
 
 ### Conclusion  
 
-The main functionalities of `rnmamod` have been presented in this tutorial. The interested reader is prompted to browse through the [manual](https://cran.r-project.org/web/packages/rnmamod/rnmamod.pdf) to dive in the technical details of the functions.
+The main functionalities of [rnmamod](https://CRAN.R-project.org/package=rnmamod) have been 
+presented in this tutorial. The interested reader is prompted to browse through the [manual](https://cran.r-project.org/web/packages/rnmamod/rnmamod.pdf) to dive in the technical details of the functions.
 
 *For any questions about the tutorial and the rnmamod R package, feel free to contact [Spineli.Loukia@mh-hannover.de](mailto:Spineli.Loukia@mh-hannover.de). For any information about the author, visit [loukiaspineli.netlify.app](https://loukiaspineli.netlify.app/).*

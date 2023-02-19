@@ -1,5 +1,5 @@
 ---
-title: "Peek-a-boo: Evidence synthesis using the rnmamod R package"
+title: "Peek-a-boo: Evidence synthesis using the [rnmamod](https://CRAN.R-project.org/package=rnmamod) R package"
 author: "Loukia M Spineli, Chrysostomos Kalyvas, Katerina Papadimitropoulou"
 date: "2023-02-16"
 output: html_document
@@ -21,11 +21,10 @@ By the end of this hands-on tutorial you should be familiar with:
 * common misconceptions in the analysis of missing participants in systematic
 reviews with **aggregate data**;
 * the pattern-mixture model and its advantages in dealing with missing participants when synthesizing trials; 
-* conducting Bayesian network meta-analysis with missing participants using the **R package** [**rnmamod**](https://cran.r-project.org/web/packages/rnmamod/index.html), and;
-* the rnmamod package's rich visualization toolkit for critically appraising results
+* conducting Bayesian network meta-analysis with missing participants using the **R package** [**rnmamod**](https://CRAN.R-project.org/package=rnmamod), and;
+* the [rnmamod](https://CRAN.R-project.org/package=rnmamod) package's rich visualization toolkit for critically appraising results
 
-The minimum knowledge to benefit from the tutorial includes being familiar
-with:
+The minimum knowledge to benefit from the tutorial includes being familiar with:
 
 * the basics of network meta-analysis, including its assumptions, concept and technical details;
 * the Bayesian framework and recent advancements in evidence synthesis, and;
@@ -34,9 +33,8 @@ PRISMA extension statement [(Hutton et al., 2015)](https://pubmed.ncbi.nlm.nih.g
 
 ## Familiarity with systematic reviews
 
-You are leading a research project involving a systematic review
-of multiple interventions for a specific health condition and patient population.
-You have put in a lot of effort to establish a high-standards  protocol, registered it with [PROSPERO register](https://www.crd.york.ac.uk/prospero/) and 
+You are leading a research project involving a systematic review of multiple interventions 
+for a specific health condition and patient population. You have put in a lot of effort to establish a high-standards protocol, registered it with [PROSPERO register](https://www.crd.york.ac.uk/prospero/) and 
 completed the data extraction.
 
 While reviewing the extracted data, you notice that many eligible trials report having missing participants. 
@@ -44,31 +42,27 @@ While reviewing the extracted data, you notice that many eligible trials report 
 
 ## The good, the bad, and the ugly 
 
-Consider the small fictional trial in [Figure 1](#fig:fictional-example), where 20 participants have been randomised into two interventions and
-the outcome is binary (symptoms improved or worsened after intervetion). Some participants completed the trial (completers), while others left the trial prematurely for several reasons (missing). The goal is to draw conclusions using **the entire randomised sample**.
+Consider the small fictional trial in [Figure 1](#fig:fictional-example), where 20 participants have been randomized into two interventions and the outcome is binary (symptoms improved or worsened after intervention). Some participants completed the trial (completers), while others left the trial prematurely for several reasons (missing). The goal is to draw conclusions using **the entire randomized sample**.
 
 ```{r fictional, echo=FALSE, out.width = "50%", out.height = "15%", fig.align="center", fig.cap = "Figure 1: A fictional small trial of two interventions", fig.alt=""}
 knitr::include_graphics("./gigures/fictional.png")
 ```
 
-Without individual participant data, there are only a few 
-methods to handle missing participants in (network) meta-analysis:
+Without individual participant data, there are only a few methods to handle missing participants in (network) meta-analysis:
 
 1. **Exclusion** – under the assumption that the missing participants' outcomes are
 missing due to reasons unrelated to the planning and conduct of the trial 
 (**missing completely at random, MCAR**), or due to their baseline characteristics (**missing at random, MAR**),
-2. **Imputation** – assuming that the missing participants would have improved or worsened symptoms had they not left 
-the trial (**missing not at random, MNAR**),
+2. **Imputation** – assuming that the missing participants would have improved or worsened symptoms had they not left the trial (**missing not at random, MNAR**),
 3. **Modelling** – the missingness mechanism (i.e., M(C)AR or MNAR) using a probability 
 distribution to describe the association between the missing and completers' outcomes (**pattern-mixture model**).
 
 ### Exclusion
 
-Both **exclusion** and **imputation** are suboptimal methods 
-in handling missing participants. **Exclusion**, as shown in 
-[Figure 2](#fig:excluded), is not appropriate as it reduced the sample to those participants who remained
-in the trial and decreases the power to detect significant associations. Moreover, if the missingness mechanism is not M(C)AR, 
-the risk of estimating a biased intervention effect (e.g., odds ratio) is imminent. 
+Both **exclusion** and **imputation** are suboptimal methods in handling missing participants. 
+**Exclusion**, as shown in [Figure 2](#fig:excluded), is not appropriate as it reduces the sample to those participants who remained in the trial and decreases the power to detect significant associations. 
+Moreover, if the missingness mechanism is not M(C)AR, the risk of estimating a biased intervention effect 
+(e.g., odds ratio) is imminent. 
 
 ```{r excluded, echo=FALSE, out.width = "50%", out.height = "15%", fig.align="center", fig.cap = "Figure 2: Excluding missing participants from both interventions", fig.alt=""}
 knitr::include_graphics("./gigures/excluded.png")
@@ -77,14 +71,14 @@ knitr::include_graphics("./gigures/excluded.png")
 ### Imputation
 
 [Figure 3](#fig:imputed) illustrates the **imputation** of missing participants in two interventions.
-In in the first intervention, it is assumed that all missing participants experienced symptom improvement 
+In in the first intervention, it is assumed that all missing participants experienced symptom improvement, 
 and thus, left the trial prematurely. In the second intervention, it is assumed that all missing 
 participants experienced symptom deterioration and left the trial prematurely. 
 Imputation implies adding the number of missing participants to the outcome 
 based on the corresponding scenario: to the number of events (improvement) in 
 the first intervention and to the number of non-events (deterioration) in the 
-second intervention. This method preserves the randomised sample but assumes the 
-missingness scenario. Without following the missing participants to 
+second intervention. This method preserves the randomized sample but takes the 
+missingness scenario for granted. Without following the missing participants to 
 record their outcome, we cannot know the **true missingness mechanism**. Hence, 
 any assumptions we make about the missingness mechanism should naturally propagate 
 in the estimation of the intervention effect by increasing its standard error. 
@@ -95,9 +89,9 @@ statistical significance conclusions.
 ```{r imputed, echo=FALSE, out.width = "50%", out.height = "15%", fig.align="center", fig.cap = "Figure 3: Imputing missing participants making different scenarios in each intervention", fig.alt=""}
 knitr::include_graphics("./gigures/imputed.png")
 ```
-(Network) meta-analysis inherits the limitations of exclusion 
-and imputation observed at trial-level via the inclusion of trials with missing 
-participants. As you do not have individual 
+
+(Network) meta-analysis inherits the limitations of exclusion and imputation observed 
+at trial-level via the inclusion of trials with missing participants. As you do not have individual 
 participant data to make use of different cool methods for missing participants, 
 the quality of the (network) meta-analysis results will strongly depend, among others things, 
 on your *good guess* about the missingness mechanism and how you incorporate 
@@ -109,10 +103,10 @@ The last member of the squad of methods for missing participants in (network) me
 is the pattern-mixture model. The **pattern-mixture model** elegantly adjusts, rather than fixes, the average 
 outcome (in this case, the risk of event) to the assumed missingness mechanism, and propagates 
 this assumption to the standard error of the estimated intervention effect, while 
-maintaining the randomised sample. It allows for different assumptions about the missing
-mechanism  between interventions or across the trials, offering a flexible framework for properly handling missing participants 
-in (network) meta-analysis. If exclusion, imputation and pattern-mixture model were 
-characters from the epic Western spaghetti film, *The Good, the Bad and the Ugly*, 
+maintaining the randomized sample. It allows for different assumptions about the missing
+mechanism  between interventions or across the trials, offering a flexible framework for properly 
+handling missing participants in (network) meta-analysis. If exclusion, imputation and pattern-mixture 
+model were characters from the epic Western spaghetti film, *The Good, the Bad and the Ugly*, 
 the correspondence of who would be who is rather clear.
 
 [Figure 4](#fig:imor) shows two normal distributions of the 
@@ -126,24 +120,26 @@ To illustrate this, we have considered a different IMOR distribution for each
 intervention. For the the first intervention, we assumed that, *on average*, the odds of an event  
 in completers were twice that in missing participants (the mode), with 
 other scenarios being less likely to occur as we deviate from the mode. 
-For the second intervention, we assumed that, on average, 
-the odds of an event in missing participants were twice that in completers (the mode), 
-again, with other scenarios being less likely to occur as we deviate 
-from the mode. It is important to note that the normal distributions 
-presented in [Figure 4](#fig:imor) are implied for the IMOR in the logarithmic 
-scale, which is commonly used when estimating the odds ratio. 
+For the second intervention, we assumed that, on average, the odds of an event 
+in missing participants were twice that in completers (the mode), again, with other 
+scenarios being less likely to occur as we deviate from the mode. It is important 
+to note that the normal distributions presented in [Figure 4](#fig:imor) are implied 
+for the IMOR parameter in the logarithmic scale, which is commonly used when 
+estimating the odds ratio. 
 
 ```{r imor, echo=FALSE, out.width = "55%", out.height = "20%", fig.align="center", fig.cap = "Figure 4: The IMOR parameter under different scenarios for each intervention", fig.alt=""}
 knitr::include_graphics("./gigures/imor.png")
 ```
 
 ## The versatility of the rnmamod R package <img src="gigures/hexsticker_rnmamod.png" align="right" width="170" />    
-
-The rnmamod R package was originally developed to address the lack of dedicated functions for handling
-missing participants in pairwise and network meta-analysis in existing R packages. Over time, our goal expanded to create a comprehensive 
-suite of functions for performing and visualizing Bayesian pairwise and network meta-analysis. 
-The package implements the pattern-mixture model for Proper handling of missing participants in all models. 
-In this tutorial, we will walk you through the core functions of the package and provide a comprehensive visual summary of the results. 
+The [rnmamod](https://CRAN.R-project.org/package=rnmamod) R package 
+was originally developed to address the lack of dedicated functions for handling
+missing participants in pairwise and network meta-analysis in existing R packages. 
+Over time, our goal expanded to create a comprehensive suite of functions for performing 
+and visualizing Bayesian pairwise and network meta-analysis. The package implements 
+the pattern-mixture model for proper handling of missing participants in all models. 
+In this tutorial, we will walk you through the core functions of the package and 
+provide a comprehensive visual summary of the results. 
 
 ### Let's get started
 
@@ -160,7 +156,7 @@ However, we recommend installing the **development version** to experience the l
 install.packages("devtools")
 devtools::install_github("LoukiaSpin/rnmamod")
 ```
-We will use the dataset of [Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/), which includes 21 trials comparing seven pharmacological interventions and placebo in chronic obstructive pulmonary disease (COPD) patients. The aim is to determine if patients experienced COPD exacerbation after receiving the randomised intervention. Run `head(nma.baker2009)` to see the first six trials, or `nma.baker2009` to see the entire dataset. The dataset has one-trial-per-row format, which is the typical format encountered in BUGS language models. 
+We will use the dataset of [Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/), which includes 21 trials comparing seven pharmacological interventions and placebo in chronic obstructive pulmonary disease (COPD) patients. The aim is to determine if patients experienced COPD exacerbation after receiving the randomized intervention. Run `head(nma.baker2009)` to see the first six trials, or `nma.baker2009` to see the entire dataset. The dataset has one-trial-per-row format, which is the typical format encountered in BUGS language models. 
 
 ```{r, results='hide'}
 head(nma.baker2009)
@@ -191,7 +187,8 @@ netplot(data = nma.baker2009,
 knitr::include_graphics("./gigures/network_baker.jpg")
 ```
 The function currently calls the `nma.networkplot` function from the [pcnetmeta](https://CRAN.R-project.org/package=netmeta) R package.
-The `netplot` function gives further insights into the network evidence by printing the following three tables on the console:
+The `netplot` function gives further insights into the network evidence by printing 
+the following three tables on the console:
 
 * **A description of the network evidence**
 
@@ -199,12 +196,12 @@ The `netplot` function gives further insights into the network evidence by print
 knitr::include_graphics("./gigures/network_evidence.png")
 ```
 
-* **A summary of the trials, randomised sample, and outcome data for each intervention**
+* **A summary of the trials, randomized sample, and outcome data for each intervention**
 
 ```{r interventions_evidence, echo=FALSE, out.width = "100%", out.height = "50%", fig.align="center", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/interventions_evidence.png")
 ```
-* **A summary of the trials, randomised sample, and outcome data for each observed comparison in the network**
+* **A summary of the trials, randomized sample, and outcome data for each observed comparison in the network**
 
 ```{r observed_comparisons, echo=FALSE, out.width = "100%", out.height = "50%", fig.align="center", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/observed_comparisons.png")
@@ -212,7 +209,8 @@ knitr::include_graphics("./gigures/observed_comparisons.png")
 
 ### Mapping the evidence on missing participants
 
-The `nma.baker2009` dataset was selected due to its high number of missing participants in most trials, interventions and comparisons. Use the `heatmap_missing_dataset` function to view the distribution of missing participants (in percent) in the dataset. Most trials have interventions with high level of missingness, with only a few trials having zeror or low missingness rate.
+The `nma.baker2009` dataset was selected due to its high number of missing participants in most trials, interventions and comparisons. Use the `heatmap_missing_dataset` function to view the distribution of missing participants (in percent) in the dataset. Most trials have interventions with high level of missingness, 
+with only a few trials having zero or low missingness rate.
 
 ```{r, results='hide', fig.show='hide'}
 # Abbreviated interventions (in the order they appear in the datasets)
@@ -246,7 +244,14 @@ We can immediately spot the comparison with the lowest median of missing partici
 
 ### The fine architecture of the rnmamod package
 
-This section introduces you to the *backbone function* of the rnmamod architecture: the `run_model`. This function conducts **Bayesian network meta-analysis** while accounting for missing participants using the pattern-mixture model. Most functions in the package cannot work without the `run_model` function and, on its own, it returns results for a bulk of model parameters. The magic happens once the `run_model` function is fed into the other functions of the package, which enable you to  run all necessary analyses and obtain various graphs to understand and interpret the results.
+This section introduces you to the *backbone function* of the [rnmamod](https://CRAN.R-project.org/package=rnmamod) architecture: 
+the `run_model`. This function conducts **Bayesian network meta-analysis** while 
+accounting for missing participants using the pattern-mixture model. Most functions 
+in the package cannot work without the `run_model` function and, on its own, `run_model` 
+returns results for a bulk of model parameters. The magic happens once the 
+`run_model` function is fed into the other functions of the package, which enable 
+you to run all necessary analyses and obtain various graphs to understand and 
+interpret the results.
 
 ### Conducting a random-effects network meta-analysis
 
@@ -262,17 +267,19 @@ res <- run_model(data = nma.baker2009,
                  mean_misspar = c(0, 0), 
                  var_misspar = 1,
                  D = 0,
+                 ref = 1,
                  n_chains = 3,
                  n_iter = 10000,
                  n_burnin = 1000,
                  n_thin = 1)
 ```
 
-On the console you see will two sets of progress bars: the first one shows the progress of the simulation. Once the model completes the iterations for all chains, a second progress bar appears on the console that shows the progress of the model update for `n_iter = 10000` iterations until convergence:
+<!---On the console you see will two sets of progress bars: the first one shows the progress of the simulation. Once the model completes the iterations for all chains, a second progress bar appears on the console that shows the progress of the model update for `n_iter = 10000` iterations until convergence:
 
 ```{r run_model, echo=FALSE, out.width = "50%", out.height = "30%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/run_model.png")
 ```
+--->
 
 > Specifying carefully the arguments of the `run_model` function is essential for the subsequent analyses to yield sensible results. This requires thorough consideration of the proper effect measure (`measure`), the meta-analysis model (`model`), the structure of the missingness parameter (`assumption`), the prior distribution for the heterogeneity parameter (`heter_prior`), the missingness mechanism (`mean_misspar` and `var_misspar`), the direction of the outcome (`D`), and the necessary tuning parameters to run Markov chain Monte Carlo simulations using JAGS (`n_chains`, `n_iter`, `n_burning`, and `n_thin`). Refer to the documentation of the function by typing `?run_model`.
 
@@ -296,7 +303,7 @@ Here, we illustrate a panel of bar plots on the log odds ratio for all possible 
 ```{r mcmc_effect, echo=FALSE, out.width = "100%", out.height = "70%", fig.align="center", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/mcmc_effect.png")
 ```
-It displays diagnostic plots (trace, density, and autocorrelation) for the monitored parameters specified in the `par` argument (here, the log odds ratio for all possible pairwise comparisons, `"EM"`, and the common between-trial standard deviation, `"tau"`). Access all monitored parameters from `run_model` using `res$jagsfit`. 
+It displays diagnostic plots (trace, density, and autocorrelation) for the monitored parameters specified in the `par` argument (here, the log odds ratio for all possible pairwise comparisons, `"EM"`, and the common between-trial standard deviation, `"tau"`). Access all monitored parameters from `run_model` using `res$jagsfit`. The HTML file is created thanks to the `mcmcplot` function of the [mcmcplots](https://CRAN.R-project.org/package=mcmcplots) R package.
 
 ```{r mcmc_browser, echo=FALSE, out.width = "100%", out.height = "70%", fig.align="left", fig.cap = "", fig.alt=""}
 knitr::include_graphics("./gigures/mcmc_browser.png")
@@ -321,8 +328,9 @@ league_heatmap(full1 = res,
 knitr::include_graphics("./gigures/league_baker.png")
 ```
 
-The table is read as row versus column and shows the (posterior mean) odds ration and 95% credible interval for each comparison The interventions are sorted in decreasing order by their posterior mean SUCRA value shown in the main diagonal. The larger the treatment effect, the darker the color shade. The `league_heatmap` function can also display the treatment effects from two outcomes. 
-
+The table is read as row versus column and shows the (posterior mean) odds ratio and 95% credible interval for each comparison. The interventions are sorted in decreasing order by their posterior mean SUCRA value shown in the main diagonal. The larger the treatment effect, the darker the color shade. 
+The `league_heatmap` function can also display the treatment effects from two outcomes or a selected
+subset of interventions (ideal for huge networks). 
 
 #### Prediction
 

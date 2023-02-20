@@ -71,7 +71,7 @@ knitr::include_graphics("./gigures/excluded.png")
 ### Imputation
 
 [Figure 3](#fig:imputed) illustrates the **imputation** of missing participants in two interventions.
-In in the first intervention, it is assumed that all missing participants experienced symptom improvement, 
+In the first intervention, it is assumed that all missing participants experienced symptom improvement, 
 and thus, left the trial prematurely. In the second intervention, it is assumed that all missing 
 participants experienced symptom deterioration and left the trial prematurely. 
 Imputation implies adding the number of missing participants to the outcome 
@@ -143,13 +143,12 @@ provide a comprehensive visual summary of the results.
 
 ### Let's get started
 
-You may install and load the package directly **from CRAN** by running the code below:
+You can install and load the package directly **from CRAN** by running the code below:
 
 ```{r, warning=FALSE}
 install.packages("rnmamod")
 library(rnmamod)
 ```
-
 However, we recommend installing the **development version** to experience the latest advances in the package:
 
 ```{r, results='hide', eval=FALSE}
